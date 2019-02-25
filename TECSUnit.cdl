@@ -1,18 +1,19 @@
 /* POSIX 用の簡単なテスト環境のコンポーネント記述を取り込む */
 import( <cygwin_kernel.cdl> );
 
-/* tHelloWorld セルタイプ (コンポーネントの型) */
-celltype tHelloWorld {
+/* tTECSUnit セルタイプ (コンポーネントの型) */
+celltype tTECSUnit {
 	entry sTaskBody eMain;
 };
 
-/* HelloWorld セル (コンポーネント) */
-cell tHelloWorld HelloWorld {
+/* TECSUnit セル (コンポーネント) */
+cell tTECSUnit TECSUnit {
+  /*----- TECSUnit test -----*/
 };
 
-/* Task1 セル (コンポーネント) */
-cell tTask Task1 {
-	cBody = HelloWorld.eMain;
+/* Task セル (コンポーネント) */
+cell tTask Task {
+	cBody = TECSUnit.eMain;
 	priority = 11;		/* この値は使われていない */
 	stackSize = 4096;	/* この値は使われていない */
 	taskAttribute = C_EXP( "TA_ACT");

@@ -1,7 +1,7 @@
 # このファイルは tecsgen により自動生成されました
 # Makefile.temp は gen の一つ上のディレクトリに移して使用します
 #  % mv Makefile.temp Makefile
-# 
+#
 # clean のデフォルト動作は $(GEN_DIR)/Makefile.* を削除します
 #
 # このファイルは GNU make で gcc を用い POSIX 環境で動作するモジュールをビルドするのに適切なように生成されています
@@ -10,7 +10,7 @@
 
 # 変数 #_MVAR_#
 # fixed variable (unchangeable by config or plugin)
-TARGET_BASE = HelloWorld
+TARGET_BASE = TECSUnit
 BASE_DIR = .
 GEN_DIR = $(BASE_DIR)/gen
 INCLUDES = -I $(BASE_DIR)/. -I $(BASE_DIR)/../test/cygwin -I $(TECSPATH) -I $(TECSPATH)/mruby -I $(TECSPATH)/posix -I $(TECSPATH)/rpc -I $(TECSPATH)/TECSInfo -I $(TECSPATH)/TLSFMalloc -I $(GEN_DIR)
@@ -27,7 +27,7 @@ CFLAGS = $(INCLUDES) $(DEFINES) -D  "Inline=static inline"
 LD = gcc
 
 #default Liknker Options
-LDFLAGS = 
+LDFLAGS =
 
 #default source directory
 SRC_DIR = $(BASE_DIR)/src
@@ -80,15 +80,15 @@ clean :
 tecs : $(PRE_TECSGEN_TARGET) $(TIMESTAMP) $(POST_TECSGEN_TARGET)
 
 $(TIMESTAMP) : $(TECS_IMPORTS)
-	$(TECSGEN)  -I ../test/cygwin HelloWorld.cdl
+	$(TECSGEN)  -I ../test/cygwin TECSUnit.cdl
 # generic target for objs
 $(_TECS_OBJ_DIR)%.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 $(_TECS_OBJ_DIR)tTask.o : tTask.c
 	$(CC) -c $(CFLAGS) -o $@ $<
- 
-$(_TECS_OBJ_DIR)tHelloWorld.o : tHelloWorld.c
+
+$(_TECS_OBJ_DIR)tTECSUnit.o : tTECSUnit.c
 	$(CC) -c $(CFLAGS) -o $@ $<
- 
+
 # $(_TECS_OBJ_DIR)vasyslog.o : vasyslog.c
