@@ -20,8 +20,7 @@
 #define	E_ID	(-18)	/* illegal ID */
 #endif
 /* Prototype TECSUnit */
-static void
-call_sTest1( CELLCB *p_cellcb, char_t *entry_path, int arg);
+/* /Prototype TECSUnit */
 
 /* 受け口関数 #_TEPF_# */
 /* #[<ENTRY_PORT>]# eMain
@@ -49,7 +48,7 @@ eMain_main(CELLIDX idx)
 	/* ここに処理本体を記述します #_TEFB_# */
 
   /* Call TECSUnit */
-	call_sTest1( p_cellcb, "UnitTest1.eUnitTest1", 5);
+  /* /Call TECSUnit */
 
 }
 
@@ -57,18 +56,4 @@ eMain_main(CELLIDX idx)
  *   これより下に非受け口関数を書きます
  * #[</POSTAMBLE>]#*/
 /* Function TECSUnit */
-static void
-call_sTest1( CELLCB *p_cellcb, char_t *entry_path, int arg){
-	ER     ercd;
-	void   *rawEntryDesc;
-	Descriptor( sTest1 )      func1Desc;
-	ercd = getRawEntryDescriptor( p_cellcb, entry_path, &rawEntryDesc, "sTest1" );
-	if( ercd == E_OK ){
-		setRawEntryDescriptor( func1Desc, sTest1, rawEntryDesc );
-		cUnitTest1_set_descriptor( sTest1Desc );
-		cUnitTest1_func1( arg );
-	}
-	else {
-		printf( "call_sTest1: errro: cUnitTest1_func1() not called" );
-	}
-}
+/* /Function TECSUnit */

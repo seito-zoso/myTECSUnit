@@ -6,10 +6,7 @@ import("target.cdl");
 celltype tTECSUnit {
 	entry sTaskBody eMain;
   /*----- TECSUnit test -----*/
-	[dynamic, optional]
-		call sTarget1 cUnitTest1;
-  [dynamic, optional]
-    call sTarget2 cUnitTest2;
+  /*----- /TECSUnit test -----*/
 };
 
 /* TECSUnit セル (コンポーネント) */
