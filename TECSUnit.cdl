@@ -1,14 +1,21 @@
 /* POSIX 用の簡単なテスト環境のコンポーネント記述を取り込む */
 import( <cygwin_kernel.cdl> );
-
+import("target.cdl");
+/*  */
 /* tTECSUnit セルタイプ (コンポーネントの型) */
 celltype tTECSUnit {
 	entry sTaskBody eMain;
+  /*----- TECSUnit test -----*/
+	[dynamic, optional]
+		call sTarget1 cUnitTest1;
+  [dynamic, optional]
+    call sTarget2 cUnitTest2;
 };
 
 /* TECSUnit セル (コンポーネント) */
 cell tTECSUnit TECSUnit {
-  /*----- TECSUnit test -----*/
+  cUnitTest1 = Target1.eTarget1;
+  cUnitTest2 = Target2.eTarget2;
 };
 
 /* Task セル (コンポーネント) */

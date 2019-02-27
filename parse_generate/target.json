@@ -1,20 +1,20 @@
 {
   "target1": {
-    "celltype":"tUnitTest1",
-    "cell":"UnitTest1", // セル
-    "entry":"eUnitTest1",
-    "signature":"sTest1",
-    "function":"func1", // 受け口関数
+    "celltype":"tTarget1",
+    "cell":"Target1", // セル
+    "entry":"eTarget1",
+    "signature":"sTarget1",
+    "function":"double", // 受け口関数
     "arguments":[5],    // 受け口関数の引数
-    "return":1          // 戻り値の期待値
+    "return":11          // 戻り値の期待値
   },
   "target2": {
-    "celltype":"tUnitTest2",
-    "cell":"UnitTest2",
-    "signature":"sTest",
-    "function":"func2",
+    "celltype":"tTarget2",
+    "cell":"Target2",
+    "signature":"sTarget2",
+    "function":"add",
     "arguments":[5,2],
-    "return":1
+    "return":7
   }
 }
 

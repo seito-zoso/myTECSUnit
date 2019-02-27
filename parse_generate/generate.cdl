@@ -1,6 +1,0 @@
-celltype tTECSUnit {
-  [dynamic, optional]
-    call sTest cUnitTest1;
-  [dynamic, optional]
-    call sTest cUnitTest2;
-};

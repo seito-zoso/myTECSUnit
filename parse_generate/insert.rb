@@ -3,8 +3,8 @@ class TECSUnit
 
   def initialize(index,json_hash)
     @lines = []
-    @cdl = "unit.cdl"
-    @celltype_code = "tTaskMain.c"
+    @cdl = "../TECSUnit.cdl" # 必要に応じて書き換える
+    @celltype_code = "../src/tTECSUnit.c" # 必要に応じて書き換える
     @insert_idx = 0
     @index = index
     @target = json_hash["target#{@index}"]
