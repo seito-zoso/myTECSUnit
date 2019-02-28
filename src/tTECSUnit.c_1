@@ -9,20 +9,6 @@
  * #[<...>]# から #[</...>]# で囲まれたコメントは編集しないでください
  * tecsmerge によるマージに使用されます
  *
- * 呼び口関数 #_TCPF_#
- * call port: cUnitTest1 signature: sTarget1 context:task optional:true
- *   bool_t     is_cUnitTest1_joined()                     check if joined
- *   int            cUnitTest1_double( int arg );
- *   [dynamic, optional]
- *      void           cUnitTest1_set_descriptor( Descriptor( sTarget1 ) desc );
- *      void           cUnitTest1_unjoin(  );
- * call port: cUnitTest2 signature: sTarget2 context:task optional:true
- *   bool_t     is_cUnitTest2_joined()                     check if joined
- *   int            cUnitTest2_add( int arg1, int arg2 );
- *   [dynamic, optional]
- *      void           cUnitTest2_set_descriptor( Descriptor( sTarget2 ) desc );
- *      void           cUnitTest2_unjoin(  );
- *
  * #[</PREAMBLE>]# */
 
 /* プロトタイプ宣言や変数の定義をここに書きます #_PAC_# */
