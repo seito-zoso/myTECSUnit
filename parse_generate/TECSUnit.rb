@@ -38,7 +38,7 @@ class TECSUnit
     insert_lines(@celltype_code)
   end
 
-  def function_insert
+  def function_insert # 返り値がintに限定されている
     search_idx(@celltype_code,"Function TECSUnit")
     add_text("static void\n")
     add_text("call_#{@target["signature"]}( CELLCB *p_cellcb, char_t *entry_path, int arg){\n")
@@ -49,7 +49,11 @@ class TECSUnit
     add_text("\tif( ercd == E_OK ){\n")
     add_text("\t\tsetRawEntryDescriptor( #{@target["function"]}Desc, #{@target["signature"]}, rawEntryDesc );\n")
     add_text("\t\tcUnitTest#{@index}_set_descriptor( #{@target["signature"]}Desc );\n")
-    add_text("\t\tcUnitTest#{@index}_#{@target["function"]}( arg );\n")
+    add_text("\t\tif ( cUnitTest#{@index}_#{@target["function"]}( arg ) == #{@target["return"]}){\n")
+    add_text("\t\t\tprintf(\"OK\")\n")
+    add_text("\t\t} else {\n")
+    add_text("\t\t\tprintf(\"NG\")\n")
+    add_text("\t\t}\n")
     add_text("\t}\n")
     add_text("\telse {\n")
     add_text("\t\tprintf( \"call_#{@target["signature"]}: errro: cUnitTest#{@index}_#{@target["function"]}() not called\" );\n")
