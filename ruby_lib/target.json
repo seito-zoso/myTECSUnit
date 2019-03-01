@@ -1,0 +1,20 @@
+{
+  "target1": {
+    // "celltype":"tTarget1",
+    "cell":"Target1", // セル
+    "entry":"eTarget1",
+    "signature":"sTarget1", // いる
+    "function":"double", // いる
+    "arguments":[5],    // いる
+    "return":11          // いる
+  },
+  "target2": {
+    "celltype":"tTarget2",
+    "cell":"Target2",
+    "signature":"sTarget2",
+    "function":"add",
+    "arguments":[5,2],
+    "return":7
+  }
+}
+
