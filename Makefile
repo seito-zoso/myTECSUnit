@@ -16,7 +16,7 @@ GEN_DIR = $(BASE_DIR)/gen
 INCLUDES = -I $(BASE_DIR)/. -I $(BASE_DIR)/../test/cygwin -I $(TECSPATH) -I $(TECSPATH)/mruby -I $(TECSPATH)/posix -I $(TECSPATH)/rpc -I $(TECSPATH)/TECSInfo -I $(TECSPATH)/TLSFMalloc -I $(GEN_DIR)
 DEFINES =
 # TECSUnit の挿入rbファイルディレクトリ
-TECS_UNIT_RUBY = parse_generate
+TECS_UNIT_RUBY = ruby_lib
 
 # end of fixed variable (unchangeable by config or plugin)
 #default C Compiler
@@ -98,6 +98,6 @@ $(_TECS_OBJ_DIR)tTECSUnit.o : tTECSUnit.c
 .PHONY: insert
 insert:
 	ruby $(TECS_UNIT_RUBY)/insert.rb
-.PHONY: clean_u
-clean_u:
+.PHONY: delete
+delete:
 	ruby $(TECS_UNIT_RUBY)/clean.rb
