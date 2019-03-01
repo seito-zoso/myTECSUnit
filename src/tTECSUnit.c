@@ -10,6 +10,119 @@
  * tecsmerge によるマージに使用されます
  *
  * 呼び口関数 #_TCPF_#
+ * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
+ *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
+ *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
+ *   ER             cTECSInfo_findSignature( const char_t* namespace_path, Descriptor( nTECSInfo_sSignatureInfo )* signatureDesc );
+ *   ER             cTECSInfo_findCelltype( const char_t* namespace_path, Descriptor( nTECSInfo_sCelltypeInfo )* celltypeDesc );
+ *   ER             cTECSInfo_findCell( const char_t* namespace_path, Descriptor( nTECSInfo_sCellInfo )* cellDesc );
+ *   ER             cTECSInfo_findRawEntryDescriptor( const char_t* namespace_path, Descriptor( nTECSInfo_sRawEntryDescriptorInfo )* rawEntryDescDesc, Descriptor( nTECSInfo_sEntryInfo )* entryDesc );
+ *   ER             cTECSInfo_findRawEntryDescriptor_unsafe( const char_t* namespace_path, void** rawDesc );
+ * call port: cNSInfo signature: nTECSInfo_sNamespaceInfo context:task optional:true
+ *   bool_t     is_cNSInfo_joined()                     check if joined
+ *   ER             cNSInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cNSInfo_getNameLength( );
+ *   uint32_t       cNSInfo_getNNamespace( );
+ *   ER             cNSInfo_getNamespaceInfo( uint32_t ith, Descriptor( nTECSInfo_sNamespaceInfo )* des );
+ *   uint32_t       cNSInfo_getNSignature( );
+ *   ER             cNSInfo_getSignatureInfo( uint32_t ith, Descriptor( nTECSInfo_sSignatureInfo )* des );
+ *   uint32_t       cNSInfo_getNCelltype( );
+ *   ER             cNSInfo_getCelltypeInfo( uint32_t ith, Descriptor( nTECSInfo_sCelltypeInfo )* des );
+ *   [dynamic, optional]
+ *      void           cNSInfo_set_descriptor( Descriptor( nTECSInfo_sNamespaceInfo ) desc );
+ *      void           cNSInfo_unjoin(  );
+ * call port: cRegionInfo signature: nTECSInfo_sRegionInfo context:task optional:true
+ *   bool_t     is_cRegionInfo_joined()                     check if joined
+ *   ER             cRegionInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cRegionInfo_getNameLength( );
+ *   uint32_t       cRegionInfo_getNCell( );
+ *   ER             cRegionInfo_getCellInfo( uint32_t ith, Descriptor( nTECSInfo_sCellInfo )* des );
+ *   uint32_t       cRegionInfo_getNRegion( );
+ *   ER             cRegionInfo_getRegionInfo( uint32_t ith, Descriptor( nTECSInfo_sRegionInfo )* des );
+ *   [dynamic, optional]
+ *      void           cRegionInfo_set_descriptor( Descriptor( nTECSInfo_sRegionInfo ) desc );
+ *      void           cRegionInfo_unjoin(  );
+ * call port: cCellInfo signature: nTECSInfo_sCellInfo context:task optional:true
+ *   bool_t     is_cCellInfo_joined()                     check if joined
+ *   ER             cCellInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cCellInfo_getNameLength( );
+ *   uint32_t       cCellInfo_getNRawEntryDescriptorInfo( );
+ *   ER             cCellInfo_getRawEntryDescriptorInfo( int_t index, Descriptor( nTECSInfo_sRawEntryDescriptorInfo )* desc );
+ *   void           cCellInfo_getCelltypeInfo( Descriptor( nTECSInfo_sCelltypeInfo )* desc );
+ *   void           cCellInfo_getCBP( void** cbp );
+ *   void           cCellInfo_getINIBP( void** inibp );
+ *   [dynamic, optional]
+ *      void           cCellInfo_set_descriptor( Descriptor( nTECSInfo_sCellInfo ) desc );
+ *      void           cCellInfo_unjoin(  );
+ * call port: cSignatureInfo signature: nTECSInfo_sSignatureInfo context:task optional:true
+ *   bool_t     is_cSignatureInfo_joined()                     check if joined
+ *   ER             cSignatureInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cSignatureInfo_getNameLength( );
+ *   uint32_t       cSignatureInfo_getNFunction( );
+ *   ER             cSignatureInfo_getFunctionInfo( uint32_t ith, Descriptor( nTECSInfo_sFunctionInfo )* desc );
+ *   [dynamic, optional]
+ *      void           cSignatureInfo_set_descriptor( Descriptor( nTECSInfo_sSignatureInfo ) desc );
+ *      void           cSignatureInfo_unjoin(  );
+ * call port: cCelltypeInfo signature: nTECSInfo_sCelltypeInfo context:task optional:true
+ *   bool_t     is_cCelltypeInfo_joined()                     check if joined
+ *   ER             cCelltypeInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cCelltypeInfo_getNameLength( );
+ *   uint32_t       cCelltypeInfo_getNAttr( );
+ *   ER             cCelltypeInfo_getAttrInfo( uint32_t ith, Descriptor( nTECSInfo_sVarDeclInfo )* desc );
+ *   uint32_t       cCelltypeInfo_getNVar( );
+ *   ER             cCelltypeInfo_getVarInfo( uint32_t ith, Descriptor( nTECSInfo_sVarDeclInfo )* desc );
+ *   uint32_t       cCelltypeInfo_getNCall( );
+ *   ER             cCelltypeInfo_getCallInfo( uint32_t ith, Descriptor( nTECSInfo_sCallInfo )* desc );
+ *   uint32_t       cCelltypeInfo_getNEntry( );
+ *   ER             cCelltypeInfo_getEntryInfo( uint32_t ith, Descriptor( nTECSInfo_sEntryInfo )* desc );
+ *   bool_t         cCelltypeInfo_isSingleton( );
+ *   bool_t         cCelltypeInfo_isIDX_is_ID( );
+ *   uint32_t       cCelltypeInfo_sizeOfCB( );
+ *   uint32_t       cCelltypeInfo_sizeOfINIB( );
+ *   [dynamic, optional]
+ *      void           cCelltypeInfo_set_descriptor( Descriptor( nTECSInfo_sCelltypeInfo ) desc );
+ *      void           cCelltypeInfo_unjoin(  );
+ * call port: cVarDeclInfo signature: nTECSInfo_sVarDeclInfo context:task optional:true
+ *   bool_t     is_cVarDeclInfo_joined()                     check if joined
+ *   ER             cVarDeclInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cVarDeclInfo_getNameLength( );
+ *   void           cVarDeclInfo_getLocationInfo( uint32_t* offset, int8_t* place );
+ *   void           cVarDeclInfo_getTypeInfo( Descriptor( nTECSInfo_sTypeInfo )* desc );
+ *   void           cVarDeclInfo_getSizeIsExpr( char_t* expr_str, int32_t max_len );
+ *   ER             cVarDeclInfo_getSizeIs( uint32_t* size, const void* p_cb );
+ *   [dynamic, optional]
+ *      void           cVarDeclInfo_set_descriptor( Descriptor( nTECSInfo_sVarDeclInfo ) desc );
+ *      void           cVarDeclInfo_unjoin(  );
+ * call port: cTypeInfo signature: nTECSInfo_sTypeInfo context:task optional:true
+ *   bool_t     is_cTypeInfo_joined()                     check if joined
+ *   ER             cTypeInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cTypeInfo_getNameLength( );
+ *   uint32_t       cTypeInfo_getSize( );
+ *   int8_t         cTypeInfo_getKind( );
+ *   uint32_t       cTypeInfo_getNType( );
+ *   ER             cTypeInfo_getTypeInfo( Descriptor( nTECSInfo_sTypeInfo )* desc );
+ *   uint32_t       cTypeInfo_getNMember( );
+ *   ER             cTypeInfo_getMemberInfo( uint32_t ith, Descriptor( nTECSInfo_sVarDeclInfo )* desc );
+ *   [dynamic, optional]
+ *      void           cTypeInfo_set_descriptor( Descriptor( nTECSInfo_sTypeInfo ) desc );
+ *      void           cTypeInfo_unjoin(  );
+ * call port: cREDInfo signature: nTECSInfo_sRawEntryDescriptorInfo context:task optional:true
+ *   bool_t     is_cREDInfo_joined()                     check if joined
+ *   uint16_t       cREDInfo_getNRawEntryDescriptorInfo( );
+ *   ER             cREDInfo_getRawDescriptor( int_t ith, void** rawDesc );
+ *   [dynamic, optional]
+ *      void           cREDInfo_set_descriptor( Descriptor( nTECSInfo_sRawEntryDescriptorInfo ) desc );
+ *      void           cREDInfo_unjoin(  );
+ * call port: cEntryInfo signature: nTECSInfo_sEntryInfo context:task optional:true
+ *   bool_t     is_cEntryInfo_joined()                     check if joined
+ *   ER             cEntryInfo_getName( char_t* name, int_t max_len );
+ *   uint16_t       cEntryInfo_getNameLength( );
+ *   void           cEntryInfo_getSignatureInfo( Descriptor( nTECSInfo_sSignatureInfo )* desc );
+ *   uint32_t       cEntryInfo_getArraySize( );
+ *   bool_t         cEntryInfo_isInline( );
+ *   [dynamic, optional]
+ *      void           cEntryInfo_set_descriptor( Descriptor( nTECSInfo_sEntryInfo ) desc );
+ *      void           cEntryInfo_unjoin(  );
  * call port: cUnitTest1 signature: sTarget1 context:task optional:true
  *   bool_t     is_cUnitTest1_joined()                     check if joined
  *   int            cUnitTest1_double( int arg );
@@ -28,8 +141,6 @@
 #define	E_ID	(-18)	/* illegal ID */
 #endif
 /* Prototype TECSUnit */
-static void
-call_sTarget1( CELLCB *p_cellcb, char_t *entry_path, int arg);
 /* /Prototype TECSUnit */
 
 /* 受け口関数 #_TEPF_# */
@@ -58,7 +169,6 @@ eMain_main(CELLIDX idx)
 	/* ここに処理本体を記述します #_TEFB_# */
 
   /* Call TECSUnit */
-	call_sTarget1( p_cellcb, "Target1.eTarget1", 5);
   /* /Call TECSUnit */
 
 }
@@ -100,23 +210,4 @@ ER getRawEntryDescriptor( CELLCB *p_cellcb, char_t *entry_path, void **rawEntryD
 }
 
 /* Function TECSUnit */
-static void
-call_sTarget1( CELLCB *p_cellcb, char_t *entry_path, int arg){
-	ER     ercd;
-	void   *rawEntryDesc;
-	Descriptor( sTarget1 )      doubleDesc;
-	ercd = getRawEntryDescriptor( p_cellcb, entry_path, &rawEntryDesc, "sTarget1" );
-	if( ercd == E_OK ){
-		setRawEntryDescriptor( doubleDesc, sTarget1, rawEntryDesc );
-		cUnitTest1_set_descriptor( doubleDesc );
-		if ( cUnitTest1_double( arg ) == 11){
-			printf("OK");
-		} else {
-			printf("NG");
-		}
-	}
-	else {
-		printf( "call_sTarget1: errro: cUnitTest1_double() not called" );
-	}
-}
 /* /Function TECSUnit */
