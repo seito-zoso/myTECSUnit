@@ -35,7 +35,7 @@ celltype tTECSUnit {
 
   /*----- TECSUnit test -----*/
 	[dynamic, optional]
-		call sTarget1 cUnitTest1;
+		call  cUnitTest1;
   /*----- /TECSUnit test -----*/
 };
 

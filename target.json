@@ -3,10 +3,9 @@
     // "celltype":"tTarget1",
     "cell":"Target1", // セル
     "entry":"eTarget1",
-    "signature":"sTarget1", // いる
     "function":"double", // いる
     "arguments":[5],    // いる
-    "return":11          // いる
+    "return":11         // いる
   },
   "target2": {
     "celltype":"tTarget2",
@@ -17,4 +16,3 @@
     "return":7
   }
 }
-

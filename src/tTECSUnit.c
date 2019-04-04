@@ -141,6 +141,8 @@
 #define	E_ID	(-18)	/* illegal ID */
 #endif
 /* Prototype TECSUnit */
+static void
+call_( CELLCB *p_cellcb, char_t *entry_path, int arg);
 /* /Prototype TECSUnit */
 
 /* 受け口関数 #_TEPF_# */
@@ -169,6 +171,7 @@ eMain_main(CELLIDX idx)
 	/* ここに処理本体を記述します #_TEFB_# */
 
   /* Call TECSUnit */
+	call_( p_cellcb, "Target1.eTarget1", 5);
   /* /Call TECSUnit */
 
 }
@@ -210,4 +213,23 @@ ER getRawEntryDescriptor( CELLCB *p_cellcb, char_t *entry_path, void **rawEntryD
 }
 
 /* Function TECSUnit */
+static void
+call_( CELLCB *p_cellcb, char_t *entry_path, int arg){
+	ER     ercd;
+	void   *rawEntryDesc;
+	Descriptor(  )      doubleDesc;
+	ercd = getRawEntryDescriptor( p_cellcb, entry_path, &rawEntryDesc, "" );
+	if( ercd == E_OK ){
+		setRawEntryDescriptor( doubleDesc, , rawEntryDesc );
+		cUnitTest1_set_descriptor( Desc );
+		if ( cUnitTest1_double( arg ) == 11){
+			printf("OK");
+		} else {
+			printf("NG");
+		}
+	}
+	else {
+		printf( "call_: errro: cUnitTest1_double() not called" );
+	}
+}
 /* /Function TECSUnit */
