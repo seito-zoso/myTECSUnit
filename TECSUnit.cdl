@@ -34,8 +34,8 @@ celltype tTECSUnit {
   /*----- RawEntryDescriptor -----*/
 
   /*----- TECSUnit test -----*/
-	[dynamic, optional]
-		call  cUnitTest1;
+	// [dynamic, optional]
+	// 	call  cUnitTest1;
   /*----- /TECSUnit test -----*/
 };
 

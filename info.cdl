@@ -23,7 +23,10 @@ celltype tTaskMain {
         call  nTECSInfo::sVarDeclInfo   cVarDeclInfo;
     [dynamic,optional]
         call  nTECSInfo::sTypeInfo      cTypeInfo;
-
+    [dynamic,optional]
+        call  nTECSInfo::sFunctionInfo  cFunctionInfo;
+    [dynamic,optional]
+        call  nTECSInfo::sParamInfo     cParamInfo;
     /*----- RawEntryDescriptor test -----*/
     // [dynamic,optional]
     //     call  sPutString                cPutString;

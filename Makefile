@@ -10,7 +10,7 @@
 
 # 変数 #_MVAR_#
 # fixed variable (unchangeable by config or plugin)
-TARGET_BASE = TECSUnit
+TARGET_BASE = info
 BASE_DIR = .
 GEN_DIR = $(BASE_DIR)/gen
 INCLUDES = -I $(BASE_DIR)/. -I $(BASE_DIR)/../test/cygwin -I $(TECSPATH) -I $(TECSPATH)/mruby -I $(TECSPATH)/posix -I $(TECSPATH)/rpc -I $(TECSPATH)/TECSInfo -I $(TECSPATH)/TLSFMalloc -I $(GEN_DIR)
@@ -82,16 +82,16 @@ clean :
 tecs : $(PRE_TECSGEN_TARGET) $(TIMESTAMP) $(POST_TECSGEN_TARGET)
 
 $(TIMESTAMP) : $(TECS_IMPORTS)
-	$(TECSGEN) -I ../test/cygwin TECSUnit.cdl
+	$(TECSGEN) -I ../test/cygwin info.cdl
 # generic target for objs
 $(_TECS_OBJ_DIR)%.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(_TECS_OBJ_DIR)tTask.o : tTask.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+# $(_TECS_OBJ_DIR)tTask.o : tTask.c
+# 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(_TECS_OBJ_DIR)tTECSUnit.o : tTECSUnit.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+# $(_TECS_OBJ_DIR)tTECSUnit.o : tTECSUnit.c
+# 	$(CC) -c $(CFLAGS) -o $@ $<
 
 # $(_TECS_OBJ_DIR)vasyslog.o : vasyslog.c
 

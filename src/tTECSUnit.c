@@ -171,9 +171,9 @@ eMain_main(CELLIDX idx)
 	/* ここに処理本体を記述します #_TEFB_# */
 
   /* Call TECSUnit */
-	call_( p_cellcb, "Target1.eTarget1", 5);
+	// call_( p_cellcb, "Target1.eTarget1", 5);
   /* /Call TECSUnit */
-
+    printf("hello\n");
 }
 
 /* #[<POSTAMBLE>]#
@@ -213,23 +213,23 @@ ER getRawEntryDescriptor( CELLCB *p_cellcb, char_t *entry_path, void **rawEntryD
 }
 
 /* Function TECSUnit */
-static void
-call_( CELLCB *p_cellcb, char_t *entry_path, int arg){
-	ER     ercd;
-	void   *rawEntryDesc;
-	Descriptor(  )      doubleDesc;
-	ercd = getRawEntryDescriptor( p_cellcb, entry_path, &rawEntryDesc, "" );
-	if( ercd == E_OK ){
-		setRawEntryDescriptor( doubleDesc, , rawEntryDesc );
-		cUnitTest1_set_descriptor( Desc );
-		if ( cUnitTest1_double( arg ) == 11){
-			printf("OK");
-		} else {
-			printf("NG");
-		}
-	}
-	else {
-		printf( "call_: errro: cUnitTest1_double() not called" );
-	}
-}
+// static void
+// call_( CELLCB *p_cellcb, char_t *entry_path, int arg){
+// 	ER     ercd;
+// 	void   *rawEntryDesc;
+// 	Descriptor(  )      doubleDesc;
+// 	ercd = getRawEntryDescriptor( p_cellcb, entry_path, &rawEntryDesc, "" );
+// 	if( ercd == E_OK ){
+// 		setRawEntryDescriptor( doubleDesc, , rawEntryDesc );
+// 		cUnitTest1_set_descriptor( Desc );
+// 		if ( cUnitTest1_double( arg ) == 11){
+// 			printf("OK");
+// 		} else {
+// 			printf("NG");
+// 		}
+// 	}
+// 	else {
+// 		printf( "call_: errro: cUnitTest1_double() not called" );
+// 	}
+// }
 /* /Function TECSUnit */
