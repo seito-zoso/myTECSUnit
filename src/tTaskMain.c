@@ -4,8 +4,6 @@
  *
  * 属性アクセスマクロ #_CAAM_#
  * NAME_LEN         int16_t          ATTR_NAME_LEN
- * name             char_t*          VAR_name
- * name2            char_t*          VAR_name2
  * cell_name        char_t*          VAR_cell_name
  * celltype_name    char_t*          VAR_celltype_name
  * entry_name       char_t*          VAR_entry_name
