@@ -72,7 +72,7 @@ class TECSUnit
 
   def code_clean(file_name,keyword)
     search_idx(file_name, keyword)
-    @lines.slice!(@insert_idx+1..@clean_idx-1)
+    @lines.slice!(@insert_idx+1..@delete_idx-1)
     insert_lines(file_name)
   end
 
@@ -87,7 +87,7 @@ class TECSUnit
           flag = false # もう来ない
         end
         if line.include?("/#{keyword}")
-          @clean_idx = idx
+          @delete_idx = idx
         end
       end
     end
