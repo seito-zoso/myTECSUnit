@@ -6,6 +6,14 @@
  * NAME_LEN         int16_t          ATTR_NAME_LEN
  * name             char_t*          VAR_name
  * name2            char_t*          VAR_name2
+ * cell_name        char_t*          VAR_cell_name
+ * celltype_name    char_t*          VAR_celltype_name
+ * entry_name       char_t*          VAR_entry_name
+ * entry_name_tmp   char_t*          VAR_entry_name_tmp
+ * signature_name   char_t*          VAR_signature_name
+ * function_name    char_t*          VAR_function_name
+ * function_name_tmp char_t*          VAR_function_name_tmp
+ * argtype          char_t*          VAR_argtype
  *
  * 呼び口関数 #_TCPF_#
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
@@ -153,22 +161,21 @@
 #endif
 
 static void
-print_indent( int level );
+print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag );
 static void
-print_cell_by_path( CELLCB *p_cellcb, char_t *path );
+print_cell( CELLCB *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc );
 static void
-print_cell( CELLCB *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc, int level );
+print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc );
 static void
-print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc, int level );
+print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc );
 static void
-print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc, int level);
+print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc );
 static void
-print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc, int level);
+print_celltype( CELLCB   *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc );
 static void
-print_celltype( CELLCB   *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc, int level );
-static void
-print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc, int level );
-
+print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc );
+int
+isNull( const char *str );
 /* 受け口関数 #_TEPF_# */
 /* #[<ENTRY_PORT>]# eBody
  * entry port: eBody
@@ -198,9 +205,25 @@ eBody_main(CELLIDX idx)
     } /* end if VALID_IDX(idx) */
 
     /* ここに処理本体を記述します #_TEFB_# */
+    int flag = 0;
     printf( "started\n" );
+    /* json_insert */
+    strcpy(VAR_cell_name, "Target1");
+    strcpy(VAR_entry_name_tmp, "eTarget1");
+    strcpy(VAR_function_name_tmp, "double");
+    /* /json_insert */
 
-    print_cell_by_path( p_cellcb, "Target1" /* ユーザ入力 */);
+    print_cell_by_path( p_cellcb, VAR_cell_name, &flag );
+
+    if( isNull(VAR_entry_name) && !flag ){
+      printf("error : entry %s not found\n", VAR_entry_name_tmp );
+      return;
+    }else if( isNull(VAR_function_name) && !flag ){
+      printf("error : function %s not found\n", VAR_function_name_tmp );
+      return;
+    }
+
+    printf("%s, %s, %s, %s, %s\n", VAR_cell_name, VAR_celltype_name, VAR_entry_name, VAR_signature_name, VAR_function_name );
 
 }
 
@@ -208,127 +231,113 @@ eBody_main(CELLIDX idx)
  *   これより下に非受け口関数を書きます
  * #[</POSTAMBLE>]#*/
 static void
-print_cell_by_path( CELLCB *p_cellcb, char_t *path )
+print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag )
 {
     Descriptor( nTECSInfo_sCellInfo )  desc;
     ER    ercd;
 
-    printf( "print_cell_by_path( path=\"%s\" )\n", path );
     ercd = cTECSInfo_findCell( path, &desc );
     if( ercd == E_OK ){
-        print_cell( p_cellcb, desc, 1 );
+        print_cell( p_cellcb, desc );
     }
     else{
+        *flag = 1;
         printf( "cell %s not found\n", path );
     }
 }
 
 static void
-print_cell( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc, int level )
+print_cell( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc )
 {
     Descriptor( nTECSInfo_sCelltypeInfo ) CTdesc;
     void  *cbp, *inibp;
 
     cCellInfo_set_descriptor( CELLdesc );
-    cCellInfo_getName( VAR_name, ATTR_NAME_LEN );
 
     cCellInfo_getCelltypeInfo( &CTdesc );
-    print_indent( level );
-    printf( "cell = %s\n", VAR_name);
 
     /* celltype info */
-    print_celltype( p_cellcb, CTdesc, level + 1 );
+    print_celltype( p_cellcb, CTdesc );
 }
 
 static void
-print_celltype( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc, int level )
+print_celltype( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc )
 {
 
     Descriptor( nTECSInfo_sEntryInfo ) entryDesc;
     int i, n;
     cCelltypeInfo_set_descriptor( CTdesc );
-    cCelltypeInfo_getName( VAR_name, ATTR_NAME_LEN );
-    print_indent( level );
-    printf( "celltype name = %s\n", VAR_name );
+    cCelltypeInfo_getName( VAR_celltype_name, ATTR_NAME_LEN );
     n = cCelltypeInfo_getNEntry();
 
     for( i = 0; i < n; i++ ){
       cCelltypeInfo_getEntryInfo(i, &entryDesc);
-      print_entry(p_cellcb, entryDesc, level );
+      print_entry(p_cellcb, entryDesc );
     }
 }
 
 static void
-print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc, int level )
+print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc )
 {
     Descriptor( nTECSInfo_sSignatureInfo ) sigDesc;
     cEntryInfo_set_descriptor( Edesc );
-    cEntryInfo_getName(VAR_name, ATTR_NAME_LEN);
-    if(!strcmp(VAR_name, "eTarget1" /* ユーザ入力 */)){
-      print_indent( level );
-      printf( "entry name = %s\n", VAR_name );
+    cEntryInfo_getName(VAR_entry_name, ATTR_NAME_LEN);
+    if( !strcmp(VAR_entry_name, VAR_entry_name_tmp ) ){
       cEntryInfo_getSignatureInfo( &sigDesc );
-      print_signature(p_cellcb, sigDesc, level );
+      print_signature(p_cellcb, sigDesc );
+    }else{
+      strcpy(VAR_entry_name, "" );
     }
 }
 
 static void
-print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc, int level )
+print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc )
 {
     int n, i;
     Descriptor( nTECSInfo_sFunctionInfo )  functionDesc;
     /* signatureInfoセルに動的結合 */
     cSignatureInfo_set_descriptor( signatureDesc );
-    cSignatureInfo_getName( VAR_name, ATTR_NAME_LEN );
+    cSignatureInfo_getName( VAR_signature_name, ATTR_NAME_LEN );
     n = cSignatureInfo_getNFunction();
-    print_indent( level );
-    printf( "signature name = %s\n", VAR_name );
-    print_indent( level );
-    printf( "# of function = %d\n", n );
     for(i = 0; i < n; i++){
         cSignatureInfo_getFunctionInfo(i, &functionDesc);
-        print_function( p_cellcb, functionDesc, level + 1);
+        print_function( p_cellcb, functionDesc );
     }
 }
 
 static void
-print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc, int level)
+print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc )
 {
     int n, i;
     Descriptor( nTECSInfo_sParamInfo ) paramInfo;
     cFunctionInfo_set_descriptor( functionDesc );
-    cFunctionInfo_getName( VAR_name, ATTR_NAME_LEN );
-    if(!strcmp(VAR_name, "double" /* ユーザ入力 */)){
+    cFunctionInfo_getName( VAR_function_name, ATTR_NAME_LEN );
+    if( !strcmp( VAR_function_name, VAR_function_name_tmp ) ){
       n = cFunctionInfo_getNParam();
-      print_indent( level );
-      printf( "function name = %s\n", VAR_name );
-      print_indent( level );
-      printf( "# of param = %d\n", n );
       for(i = 0; i < n; i++){
           cFunctionInfo_getParamInfo(i, &paramInfo);
-          print_param( p_cellcb, paramInfo, level + 1);
+          print_param( p_cellcb, paramInfo );
       }
+    }else{
+      strcpy(VAR_function_name,"");
     }
 }
 
 static void
-print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc, int level)
+print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc )
 {
     Descriptor( nTECSInfo_sTypeInfo ) typeInfo;
     cParamInfo_set_descriptor( paramDesc );
-    cParamInfo_getName( VAR_name, ATTR_NAME_LEN );
     cParamInfo_getTypeInfo( &typeInfo );
     cTypeInfo_set_descriptor( typeInfo );
-    cTypeInfo_getName( VAR_name2, ATTR_NAME_LEN);
-    print_indent( level );
-    printf( "%s %s\n", VAR_name2, VAR_name );
+    cTypeInfo_getName( VAR_argtype, ATTR_NAME_LEN);
 }
 
-void
-print_indent( int level )
+int
+isNull( const char *str)
 {
-    int i;
-    for( i = 0; i < level; i++ ){
-        fputs( "  ", stdout );
+    if( str == NULL || !strlen(str) ){
+      return true;
     }
-}
+    return false;
+};
