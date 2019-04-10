@@ -207,18 +207,18 @@ eBody_main(CELLIDX idx)
     /* ここに処理本体を記述します #_TEFB_# */
     int flag = 0;
     printf( "started\n" );
+
     /* json_insert */
-    strcpy(VAR_cell_name, "Target1");
-    strcpy(VAR_entry_name_tmp, "eTarget1");
-    strcpy(VAR_function_name_tmp, "double");
     /* /json_insert */
 
-    print_cell_by_path( p_cellcb, VAR_cell_name, &flag );
+    print_cell_by_path( p_cellcb, VAR_cell_name , &flag );
 
-    if( isNull(VAR_entry_name) && !flag ){
+    if( flag ){
+      return;
+    }else if( isNull(VAR_entry_name) ){
       printf("error : entry %s not found\n", VAR_entry_name_tmp );
       return;
-    }else if( isNull(VAR_function_name) && !flag ){
+    }else if( isNull(VAR_function_name) ){
       printf("error : function %s not found\n", VAR_function_name_tmp );
       return;
     }
