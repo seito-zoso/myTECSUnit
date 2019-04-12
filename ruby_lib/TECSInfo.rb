@@ -1,20 +1,19 @@
 class TECSInfo
 
-  def initialize( index, json_hash )
+  def initialize( json_hash )
     @lines = []
     @code = "src/tTaskMain.c" # 必要に応じて書き換える
     @insert_idx = 0
     @delete_idx = 0
-    @index = index
-    @target = json_hash["target#{@index}"]
+    @target = json_hash
   end
 
   def insert
     search_idx( @code, "json_insert" )
     if @insert_idx + 1 == @delete_idx then
-      add_text( "\t\tstrcpy( VAR_cell_name, \"#{@target["cell"]}\" );\n" )
-      add_text( "\t\tstrcpy( VAR_entry_name_tmp, \"#{@target["entry"]}\" );\n" )
-      add_text( "\t\tstrcpy( VAR_function_name_tmp, \"#{@target["function"]}\" );\n" )
+      add_text( "\t\tstrcpy( VAR_cell_path, \"#{@target["cell"]}\" );\n" )
+      add_text( "\t\tstrcpy( VAR_entry_path_tmp, \"#{@target["entry"]}\" );\n" )
+      add_text( "\t\tstrcpy( VAR_function_path_tmp, \"#{@target["function"]}\" );\n" )
     end
     insert_lines( @code )
   end

@@ -6,7 +6,7 @@ begin
   File.open("target.json") do |file|
     json_hash = JSON.load(file)
   end
-  info = TECSInfo.new( 1, json_hash)
+  info = TECSInfo.new( json_hash )
   info.insert
 rescue => ex
   print ex.message, "\n"

@@ -1,9 +1,15 @@
 {
-  "target1": {
-    "cell":"Target1",
-    "entry":"eTarget1",
-    "function":"double",
-    "arguments":[5],
-    "return":11
-  }
+  "cell":"Target1",
+  "entry":"eTarget1",
+  "function":"double",
+  "arguments":[5],
+  "return":1
 }
+// {
+  // "cell":"Target2",
+  // "entry":"eTarget2",
+  // "function":"add",
+  // "arguments":[5],
+  // "return":1
+// }
+
