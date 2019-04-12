@@ -34,6 +34,7 @@ celltype tTaskMain {
         int16_t NAME_LEN = 256;
     };
     var{
+        int arg_num;
         [size_is(NAME_LEN)]
             char_t  *cell_path;
         [size_is(NAME_LEN)]
@@ -49,7 +50,7 @@ celltype tTaskMain {
          [size_is(NAME_LEN)]
             char_t  *function_path_tmp;
         [size_is(NAME_LEN)]
-            char_t  *argtype;
+            char_t  *arg_type;
     };
 };
 

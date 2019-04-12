@@ -4,6 +4,7 @@
  *
  * 属性アクセスマクロ #_CAAM_#
  * NAME_LEN         int16_t          ATTR_NAME_LEN
+ * arg_num          int              VAR_arg_num
  * cell_path        char_t*          VAR_cell_path
  * celltype_path    char_t*          VAR_celltype_path
  * entry_path       char_t*          VAR_entry_path
@@ -11,7 +12,7 @@
  * signature_path   char_t*          VAR_signature_path
  * function_path    char_t*          VAR_function_path
  * function_path_tmp char_t*          VAR_function_path_tmp
- * argtype          char_t*          VAR_argtype
+ * arg_type         char_t*          VAR_arg_type
  *
  * 呼び口関数 #_TCPF_#
  * call port: cUnit signature: sTECSUnit context:task
@@ -202,14 +203,13 @@ eBody_main(CELLIDX idx)
     printf( "--- TECSInfo ---\n" );
 
     /* json_insert */
-		strcpy( VAR_cell_path, "Target2" );
-		strcpy( VAR_entry_path_tmp, "eTarget2" );
-		strcpy( VAR_function_path_tmp, "add" );
+		strcpy( VAR_cell_path, "Target1" );
+		strcpy( VAR_entry_path_tmp, "eTarget1" );
+		strcpy( VAR_function_path_tmp, "double" );
     /* /json_insert */
-    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_entry_path_tmp );
+    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
 
     print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
-
     if( flag ){
       return;
     }else if( isNull(VAR_entry_path) ){
@@ -219,8 +219,8 @@ eBody_main(CELLIDX idx)
       printf("error : function %s not found\n", VAR_function_path_tmp );
       return;
     }
-    /* argtypeが最後の一つに対応してしまっている。 */
-    printf("=> celltype = \"%s\", signature = \"%s\", argtype = %s\n\n", VAR_celltype_path, VAR_signature_path, VAR_argtype );
+    /* arg_typeが最後の一つのみに対応してしまっている。 */
+    printf("=> celltype = \"%s\", signature = \"%s\", argnum = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
     cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
 }
 
@@ -306,18 +306,18 @@ print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signa
 static void
 print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc )
 {
-    int n, i;
+    int i;
     Descriptor( nTECSInfo_sParamInfo ) paramInfo;
     cFunctionInfo_set_descriptor( functionDesc );
     cFunctionInfo_getName( VAR_function_path, ATTR_NAME_LEN );
     if( !strcmp( VAR_function_path, VAR_function_path_tmp ) ){
-      n = cFunctionInfo_getNParam();
-      for(i = 0; i < n; i++){
+      VAR_arg_num = cFunctionInfo_getNParam();
+      for(i = 0; i < VAR_arg_num; i++){
           cFunctionInfo_getParamInfo(i, &paramInfo);
           print_param( p_cellcb, paramInfo );
       }
     }else{
-      strcpy(VAR_function_path,"");
+      strcpy( VAR_function_path, "" );
     }
 }
 
@@ -328,7 +328,7 @@ print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc )
     cParamInfo_set_descriptor( paramDesc );
     cParamInfo_getTypeInfo( &typeInfo );
     cTypeInfo_set_descriptor( typeInfo );
-    cTypeInfo_getName( VAR_argtype, ATTR_NAME_LEN);
+    cTypeInfo_getName( VAR_arg_type, ATTR_NAME_LEN);
 }
 
 int
