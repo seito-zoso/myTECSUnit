@@ -62,7 +62,7 @@ vpath %.h $(SRC_DIR) $(GEN_DIR)  ../test/cygwin $(TECSPATH) $(TECSPATH)/mruby $(
 OTHER_OBJS =                      # Add objects out of tecs care.
 # OTHER_OBJS = $(_TECS_OBJ_DIR)vasyslog.o
 # ルール #_MRUL_#
-allall: tecs insert
+allall: tecs delete insert
 	make all     # in order to include generated Makefile.tecsgen & Makefile.depend
 
 all : $(TARGET)
