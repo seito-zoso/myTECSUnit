@@ -129,6 +129,12 @@
  *   [dynamic, optional]
  *      void           cUnitTest1_set_descriptor( Descriptor( sTarget1 ) desc );
  *      void           cUnitTest1_unjoin(  );
+ * call port: cUnitTest2 signature: sTarget2 context:task optional:true
+ *   bool_t     is_cUnitTest2_joined()                     check if joined
+ *   int            cUnitTest2_add( int arg1, int arg2 );
+ *   [dynamic, optional]
+ *      void           cUnitTest2_set_descriptor( Descriptor( sTarget2 ) desc );
+ *      void           cUnitTest2_unjoin(  );
  *
  * #[</PREAMBLE>]# */
 
@@ -146,19 +152,19 @@ call_( CELLCB *p_cellcb, char_t *entry_path, int arg);
 /* /Prototype TECSUnit */
 
 /* 受け口関数 #_TEPF_# */
-/* #[<ENTRY_PORT>]# eMain
- * entry port: eMain
- * signature:  sTaskBody
+/* #[<ENTRY_PORT>]# eUnit
+ * entry port: eUnit
+ * signature:  sTECSUnit
  * context:    task
  * #[</ENTRY_PORT>]# */
 
-/* #[<ENTRY_FUNC>]# eMain_main
- * name:         eMain_main
- * global_name:  tTECSUnit_eMain_main
+/* #[<ENTRY_FUNC>]# eUnit_main
+ * name:         eUnit_main
+ * global_name:  tTECSUnit_eUnit_main
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-eMain_main(CELLIDX idx)
+eUnit_main(CELLIDX idx, const char_t* cell_name)
 {
 	CELLCB	*p_cellcb;
 	if (VALID_IDX(idx)) {
@@ -170,10 +176,6 @@ eMain_main(CELLIDX idx)
 
 	/* ここに処理本体を記述します #_TEFB_# */
 
-  /* Call TECSUnit */
-	// call_( p_cellcb, "Target1.eTarget1", 5);
-  /* /Call TECSUnit */
-    printf("hello\n");
 }
 
 /* #[<POSTAMBLE>]#

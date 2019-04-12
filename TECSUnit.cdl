@@ -1,68 +1,40 @@
-/* POSIX 用の簡単なテスト環境のコンポーネント記述を取り込む */
-import( <cygwin_kernel.cdl> );
-import( <TECSInfo.cdl> );
-import( <TECSInfoAccessor.cdl> );
-import("target.cdl");
-/*  */
-/* tTECSUnit セルタイプ (コンポーネントの型) */
+
+signature sTECSUnit {
+  void main( [in,string] const char_t *cell_name );
+};
+
 celltype tTECSUnit {
-	entry sTaskBody eMain;
-
-  /*----- TECSInfo -----*/
-  call  nTECSInfo::sTECSInfo cTECSInfo;
-  [dynamic,optional]
+    entry sTECSUnit eUnit;
+    /*----- TECSInfo -----*/
+    call nTECSInfo::sTECSInfo cTECSInfo;
+    [dynamic,optional]
       call  nTECSInfo::sNamespaceInfo cNSInfo;
-  [dynamic,optional]
+    [dynamic,optional]
       call  nTECSInfo::sRegionInfo    cRegionInfo;
-  [dynamic,optional]
+    [dynamic,optional]
       call  nTECSInfo::sCellInfo      cCellInfo;
-  [dynamic,optional]
+    [dynamic,optional]
       call  nTECSInfo::sSignatureInfo cSignatureInfo;
-  [dynamic,optional]
+    [dynamic,optional]
       call  nTECSInfo::sCelltypeInfo  cCelltypeInfo;
-  [dynamic,optional]
+    [dynamic,optional]
       call  nTECSInfo::sVarDeclInfo   cVarDeclInfo;
-  [dynamic,optional]
+    [dynamic,optional]
       call  nTECSInfo::sTypeInfo      cTypeInfo;
-  /*----- TECSInfo -----*/
+    /*----- TECSInfo -----*/
 
-  /*----- RawEntryDescriptor -----*/
-  [dynamic,optional]
+    /*----- RawEntryDescriptor -----*/
+    [dynamic,optional]
       call  nTECSInfo::sRawEntryDescriptorInfo   cREDInfo;
-  [dynamic,optional]
+    [dynamic,optional]
       call  nTECSInfo::sEntryInfo     cEntryInfo;
-  /*----- RawEntryDescriptor -----*/
+    /*----- RawEntryDescriptor -----*/
 
-  /*----- TECSUnit test -----*/
-	// [dynamic, optional]
-	// 	call  cUnitTest1;
-  /*----- /TECSUnit test -----*/
-};
-
-/* TECSUnit セル (コンポーネント) */
-// cell tTECSUnit TECSUnit {
-// /* 以下には動的に接続する */
-//   // cUnitTest1 = Target1.eTarget1;
-//   // cUnitTest2 = Target2.eTarget2;
-// };
-
-/* Task セル (コンポーネント) */
-cell tTask Task {
-	cBody = rTEMP::TECSUnit.eMain;
-	priority = 11;		/* この値は使われていない */
-	stackSize = 4096;	/* この値は使われていない */
-	taskAttribute = C_EXP( "TA_ACT");
-};
-
-[in_through()]
-region rTEMP{
-    cell tTECSUnit TECSUnit {
-        cTECSInfo  = TECSInfo.eTECSInfo;
-    };
-
-/******* TECSInfo cell *******/
-    cell nTECSInfo::tTECSInfo TECSInfo {
-        // cTECSInfo = rTECSInfo::TECSInfoSub.eTECSInfo;
-        //  この結合は TECSInfoPlugin により生成されるので結合不要
-    };
+    /*----- TECSUnit test -----*/
+      /* ここはプラグインにより自動生成される予定 */
+    [dynamic, optional]
+      call sTarget1 cUnitTest1;
+    [dynamic, optional]
+      call sTarget2 cUnitTest2;
+    /*----- /TECSUnit test -----*/
 };

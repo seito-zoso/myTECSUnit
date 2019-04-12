@@ -3,17 +3,19 @@
  * tecsmerge によるマージに使用されます
  *
  * 属性アクセスマクロ #_CAAM_#
- * NAME_LEN         int16_t          ATTR_NAME_LEN
- * cell_name        char_t*          VAR_cell_name
+ * NAME_LEN         int16_t          ATTR_NAME_LEN   
+ * cell_name        char_t*          VAR_cell_name   
  * celltype_name    char_t*          VAR_celltype_name
- * entry_name       char_t*          VAR_entry_name
+ * entry_name       char_t*          VAR_entry_name  
  * entry_name_tmp   char_t*          VAR_entry_name_tmp
  * signature_name   char_t*          VAR_signature_name
  * function_name    char_t*          VAR_function_name
  * function_name_tmp char_t*          VAR_function_name_tmp
- * argtype          char_t*          VAR_argtype
+ * argtype          char_t*          VAR_argtype     
  *
  * 呼び口関数 #_TCPF_#
+ * call port: cUnit signature: sTECSUnit context:task
+ *   void           cUnit_main( const char_t* cell_name );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -129,13 +131,6 @@
  *   [dynamic, optional]
  *      void           cParamInfo_set_descriptor( Descriptor( nTECSInfo_sParamInfo ) desc );
  *      void           cParamInfo_unjoin(  );
- * call port: cREDInfo signature: nTECSInfo_sRawEntryDescriptorInfo context:task optional:true
- *   bool_t     is_cREDInfo_joined()                     check if joined
- *   uint16_t       cREDInfo_getNRawEntryDescriptorInfo( );
- *   ER             cREDInfo_getRawDescriptor( int_t ith, void** rawDesc );
- *   [dynamic, optional]
- *      void           cREDInfo_set_descriptor( Descriptor( nTECSInfo_sRawEntryDescriptorInfo ) desc );
- *      void           cREDInfo_unjoin(  );
  * call port: cEntryInfo signature: nTECSInfo_sEntryInfo context:task optional:true
  *   bool_t     is_cEntryInfo_joined()                     check if joined
  *   ER             cEntryInfo_getName( char_t* name, int_t max_len );

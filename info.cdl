@@ -2,12 +2,12 @@ import( <cygwin_kernel.cdl> );
 import( <TECSInfo.cdl> );
 import( <TECSInfoAccessor.cdl> );
 import("target.cdl");
+import("TECSUnit.cdl");
 
-/*
- * TECSInfo 使用サンプル
- */
 celltype tTaskMain {
     entry sTaskBody            eBody;
+    call  sTECSUnit            cUnit;
+
     call  nTECSInfo::sTECSInfo cTECSInfo;
     [dynamic,optional]
         call  nTECSInfo::sNamespaceInfo cNSInfo;
@@ -27,16 +27,8 @@ celltype tTaskMain {
         call  nTECSInfo::sFunctionInfo  cFunctionInfo;
     [dynamic,optional]
         call  nTECSInfo::sParamInfo     cParamInfo;
-    /*----- RawEntryDescriptor test -----*/
-    // [dynamic,optional]
-    //     call  sPutString                cPutString;
-    // [dynamic,optional]
-    //     call  sTaskBody                 cTaskBody;
-    [dynamic,optional]
-        call  nTECSInfo::sRawEntryDescriptorInfo   cREDInfo;
     [dynamic,optional]
         call  nTECSInfo::sEntryInfo     cEntryInfo;
-    /*----- RawEntryDescriptor test -----*/
 
     attr{
         int16_t NAME_LEN = 256;
@@ -61,7 +53,7 @@ celltype tTaskMain {
     };
 };
 
-cell tTask Task1 {
+cell tTask Task {
     taskAttribute = C_EXP("TA_ACT");
     priority      = 11;
     stackSize     = 4096;
@@ -70,10 +62,14 @@ cell tTask Task1 {
 
 [in_through()]
 region rTEMP{
+
     cell tTaskMain TaskMain {
         cTECSInfo  = TECSInfo.eTECSInfo;
+        cUnit = TECSUnit.eUnit;
     };
-
+    cell tTECSUnit TECSUnit {
+        cTECSInfo  = TECSInfo.eTECSInfo;
+    };
 /******* TECSInfo cell *******/
     cell nTECSInfo::tTECSInfo TECSInfo {
         // cTECSInfo = rTECSInfo::TECSInfoSub.eTECSInfo;
