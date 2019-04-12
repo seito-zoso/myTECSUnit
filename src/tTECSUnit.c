@@ -149,6 +149,9 @@
 /* Prototype TECSUnit */
 static void
 call_( CELLCB *p_cellcb, char_t *entry_path, int arg);
+ER
+getRawEntryDescriptor( CELLCB *p_cellcb, char_t *entry_path, void **rawEntryDesc, char_t *expected_signature );
+
 /* /Prototype TECSUnit */
 
 /* 受け口関数 #_TEPF_# */
@@ -174,42 +177,36 @@ eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const
 		/* エラー処理コードをここに記述します */
 	} /* end if VALID_IDX(idx) */
 
-	/* ここに処理本体を記述します #_TEFB_# */
-//     if( strcmp( signature_name, "sUnitTest1 ) == 0 ){
-//   if( strcmp( function_name, "func1 ) == 0 )
-//     ret_val = cUnitTest1_func1( arg1, arg2 );
-//   else if( strcmp( function_name, "func2 ) == 0 )
-//     ret_val = cUnitTest1_func2( arg1, arg2, arg3 );
-// }
-// else if( strcmp( signature_name, "sUnitTest2 ) == 0 ){
-//   ...
-// }
-    printf( "This is TECSUnit, cell =  \"%s\"", cell_name );
+    printf( "--- TECSUnit ---\n" );
+    printf( "Target = \"%s\" function = \"%s\"", entry_path, function_path );
     /* 以下はプラグインにより自動生成される予定 */
+    int ret_val; // 返り値と引数の型、個数が難しい。
+    int arg1 = 1;
+    int arg2 = 3;
     void *rawDesc;
-    char_t entry_path = "引数からTODO"
+    Descriptor( sTarget1 ) Target1Desc;
+    Descriptor( sTarget2 ) Target2Desc;
 
-    if( !strcmp( cell_name, "Target1" ) ){
-        if( !strcmp( signature_name, "sTarget1" ) ){
-            Descriptor( sTarget1 ) desc;
-            getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_name );
-            setRawEntryDescriptor( desc, sTarget1, rawDesc );
-            cUnitTest1_set_descriptor( desc );
-            if( !strcmp( function_name, "double" ) ){
-                cUnitTest1_double(1); /* 引数の個数や型の処理を考えないと。TODO */
+    if( !strcmp( cell_path, "Target1" ) ){
+        if( !strcmp( signature_path, "sTarget1" ) ){
+            getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_path );
+            setRawEntryDescriptor( Target1Desc, sTarget1, rawDesc );
+            cUnitTest1_set_descriptor( Target1Desc );
+            if( !strcmp( function_path, "double" ) ){
+                ret_val = cUnitTest1_double( arg1 ); /* 引数の個数や型の処理を考えないと。TODO */
             }
         }
-    }else if ( !strcmp( cell_name, "Target2" ) ){
-        if( !strcmp( signature_name, "sTarget1" ) ){
-            Descriptor( sTarget2 ) desc;
-            getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_name );
-            setRawEntryDescriptor( desc, sTarget2, rawDesc );
-            cUnitTest1_set_descriptor( desc );
-            if( !strcmp( function_name, "add" ) ){
-                cUnitTest2_add(1,3);
+    }else if ( !strcmp( cell_path, "Target2" ) ){
+        if( !strcmp( signature_path, "sTarget1" ) ){
+            getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_path );
+            setRawEntryDescriptor( Target2Desc, sTarget2, rawDesc );
+            cUnitTest2_set_descriptor( Target2Desc );
+            if( !strcmp( function_path, "add" ) ){
+                cUnitTest2_add( arg1, arg2 );
             }
         }
     }
+    printf( "signature \"%s\", function \"%s\" : arg = %d, return = %d\n", signature_path, function_path, arg1, ret_val );
 }
 
 /* #[<POSTAMBLE>]#
