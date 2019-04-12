@@ -164,7 +164,7 @@ call_( CELLCB *p_cellcb, char_t *entry_path, int arg);
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-eUnit_main(CELLIDX idx, const char_t* cell_name)
+eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path)
 {
 	CELLCB	*p_cellcb;
 	if (VALID_IDX(idx)) {
@@ -175,7 +175,41 @@ eUnit_main(CELLIDX idx, const char_t* cell_name)
 	} /* end if VALID_IDX(idx) */
 
 	/* ここに処理本体を記述します #_TEFB_# */
+//     if( strcmp( signature_name, "sUnitTest1 ) == 0 ){
+//   if( strcmp( function_name, "func1 ) == 0 )
+//     ret_val = cUnitTest1_func1( arg1, arg2 );
+//   else if( strcmp( function_name, "func2 ) == 0 )
+//     ret_val = cUnitTest1_func2( arg1, arg2, arg3 );
+// }
+// else if( strcmp( signature_name, "sUnitTest2 ) == 0 ){
+//   ...
+// }
+    printf( "This is TECSUnit, cell =  \"%s\"", cell_name );
+    /* 以下はプラグインにより自動生成される予定 */
+    void *rawDesc;
+    char_t entry_path = "引数からTODO"
 
+    if( !strcmp( cell_name, "Target1" ) ){
+        if( !strcmp( signature_name, "sTarget1" ) ){
+            Descriptor( sTarget1 ) desc;
+            getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_name );
+            setRawEntryDescriptor( desc, sTarget1, rawDesc );
+            cUnitTest1_set_descriptor( desc );
+            if( !strcmp( function_name, "double" ) ){
+                cUnitTest1_double(1); /* 引数の個数や型の処理を考えないと。TODO */
+            }
+        }
+    }else if ( !strcmp( cell_name, "Target2" ) ){
+        if( !strcmp( signature_name, "sTarget1" ) ){
+            Descriptor( sTarget2 ) desc;
+            getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_name );
+            setRawEntryDescriptor( desc, sTarget2, rawDesc );
+            cUnitTest1_set_descriptor( desc );
+            if( !strcmp( function_name, "add" ) ){
+                cUnitTest2_add(1,3);
+            }
+        }
+    }
 }
 
 /* #[<POSTAMBLE>]#

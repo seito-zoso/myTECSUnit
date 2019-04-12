@@ -1,6 +1,9 @@
 
 signature sTECSUnit {
-  void main( [in,string] const char_t *cell_name );
+  void main( [in,string] const char_t *cell_path,
+             [in,string] const char_t *entry_path,
+             [in,string] const char_t *signature_path,
+             [in,string] const char_t *function_path );
 };
 
 celltype tTECSUnit {

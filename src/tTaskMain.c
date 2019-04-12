@@ -4,18 +4,18 @@
  *
  * 属性アクセスマクロ #_CAAM_#
  * NAME_LEN         int16_t          ATTR_NAME_LEN   
- * cell_name        char_t*          VAR_cell_name   
- * celltype_name    char_t*          VAR_celltype_name
- * entry_name       char_t*          VAR_entry_name  
- * entry_name_tmp   char_t*          VAR_entry_name_tmp
- * signature_name   char_t*          VAR_signature_name
- * function_name    char_t*          VAR_function_name
- * function_name_tmp char_t*          VAR_function_name_tmp
+ * cell_path        char_t*          VAR_cell_path   
+ * celltype_path    char_t*          VAR_celltype_path
+ * entry_path       char_t*          VAR_entry_path  
+ * entry_path_tmp   char_t*          VAR_entry_path_tmp
+ * signature_path   char_t*          VAR_signature_path
+ * function_path    char_t*          VAR_function_path
+ * function_path_tmp char_t*          VAR_function_path_tmp
  * argtype          char_t*          VAR_argtype     
  *
  * 呼び口関数 #_TCPF_#
  * call port: cUnit signature: sTECSUnit context:task
- *   void           cUnit_main( const char_t* cell_name );
+ *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -217,7 +217,7 @@ eBody_main(CELLIDX idx)
     }
 
     printf("%s, %s, %s, %s, %s\n", VAR_cell_name, VAR_celltype_name, VAR_entry_name, VAR_signature_name, VAR_function_name );
-
+    cUnit_main( VAR_cell_name, VAR_signature_name, VAR_function_name );
 }
 
 /* #[<POSTAMBLE>]#

@@ -35,19 +35,19 @@ celltype tTaskMain {
     };
     var{
         [size_is(NAME_LEN)]
-            char_t  *cell_name;
+            char_t  *cell_path;
         [size_is(NAME_LEN)]
-            char_t  *celltype_name;
+            char_t  *celltype_path;
         [size_is(NAME_LEN)]
-            char_t  *entry_name;
+            char_t  *entry_path;
         [size_is(NAME_LEN)]
-            char_t  *entry_name_tmp;
+            char_t  *entry_path_tmp;
         [size_is(NAME_LEN)]
-            char_t  *signature_name;
+            char_t  *signature_path;
         [size_is(NAME_LEN)]
-            char_t  *function_name;
+            char_t  *function_path;
          [size_is(NAME_LEN)]
-            char_t  *function_name_tmp;
+            char_t  *function_path_tmp;
         [size_is(NAME_LEN)]
             char_t  *argtype;
     };
