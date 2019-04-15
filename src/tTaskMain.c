@@ -203,9 +203,12 @@ eBody_main(CELLIDX idx)
     printf( "--- TECSInfo ---\n" );
 
     /* json_insert */
-		strcpy( VAR_cell_path, "Target1" );
-		strcpy( VAR_entry_path_tmp, "eTarget1" );
-		strcpy( VAR_function_path_tmp, "double" );
+	int arg1 = 5;
+	char arg2[] = "hoge";
+	double arg3 = 3.14;
+	strcpy( VAR_cell_path, "Target1" );
+	strcpy( VAR_entry_path_tmp, "eTarget1" );
+	strcpy( VAR_function_path_tmp, "double" );
     /* /json_insert */
     printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
 
@@ -220,7 +223,7 @@ eBody_main(CELLIDX idx)
       return;
     }
     /* arg_typeが最後の一つのみに対応してしまっている。 */
-    printf("=> celltype = \"%s\", signature = \"%s\", argnum = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
+    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
     cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
 }
 

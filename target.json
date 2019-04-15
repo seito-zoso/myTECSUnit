@@ -2,8 +2,8 @@
   "cell":"Target1",
   "entry":"eTarget1",
   "function":"double",
-  "arguments":[5],
-  "return":1
+  "arg":[ 5, "hoge", 3.14 ],
+  "expected_value":1
 }
 // {
   // "cell":"Target2",
