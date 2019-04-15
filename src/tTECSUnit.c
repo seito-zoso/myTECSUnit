@@ -178,35 +178,53 @@ eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const
 	} /* end if VALID_IDX(idx) */
 
     printf( "--- TECSUnit ---\n" );
-    printf( "Target = \"%s\" function = \"%s\"", entry_path, function_path );
+    printf( "Target = \"%s\" function = \"%s\"\n", entry_path, function_path );
     /* 以下はプラグインにより自動生成される予定 */
-    int ret_val; // 返り値と引数の型、個数が難しい。
-    int arg1 = 1;
-    int arg2 = 3;
     void *rawDesc;
     Descriptor( sTarget1 ) Target1Desc;
     Descriptor( sTarget2 ) Target2Desc;
 
+    // int ret_val; // 返り値と引数の型、個数が難しい。
+    /* json_insert */
+	int arg1 = 5;
+	int arg2 = 3;
+	int exp_val = 8;
+	int ret_val;
+    /* /json_insert */
+
+/* Pluginにより全セルについて自動生成したい */
     if( !strcmp( cell_path, "Target1" ) ){
         if( !strcmp( signature_path, "sTarget1" ) ){
             getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_path );
             setRawEntryDescriptor( Target1Desc, sTarget1, rawDesc );
             cUnitTest1_set_descriptor( Target1Desc );
             if( !strcmp( function_path, "double" ) ){
-                ret_val = cUnitTest1_double( arg1 ); /* 引数の個数や型の処理を考えないと。TODO */
+                ret_val = cUnitTest1_double( arg1 );
+                if( ret_val == exp_val ){
+                    printf("OK: function \"%s\" returned expected %d\n", function_path, ret_val );
+                }else{
+                    printf("NG: you expected %d ,but function \"%s\" returned %d\n", exp_val, function_path, ret_val );
+                }
             }
         }
     }else if ( !strcmp( cell_path, "Target2" ) ){
-        if( !strcmp( signature_path, "sTarget1" ) ){
+        if( !strcmp( signature_path, "sTarget2" ) ){
             getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_path );
             setRawEntryDescriptor( Target2Desc, sTarget2, rawDesc );
             cUnitTest2_set_descriptor( Target2Desc );
             if( !strcmp( function_path, "add" ) ){
-                cUnitTest2_add( arg1, arg2 );
+                ret_val = cUnitTest2_add( arg1, arg2 );
+                if( ret_val == ret_val ){
+                    printf("OK: function \"%s\" returned expected %d\n", function_path, ret_val );
+                }else{
+                    printf("NG: you expected %d ,but function \"%s\" returned %d\n", exp_val, function_path, ret_val );
+                }
             }
         }
     }
-    printf( "signature \"%s\", function \"%s\" : arg = %d, return = %d\n", signature_path, function_path, arg1, ret_val );
+/* Pluginにより自動生成したい */
+
+    // printf( "signature \"%s\", function \"%s\" : arg = %d, return = %d\n", signature_path, function_path, arg1, ret_val );
 }
 
 /* #[<POSTAMBLE>]#

@@ -7,7 +7,8 @@ begin
     json_hash = JSON.load(file)
   end
   info = TECSInfo.new( json_hash )
-  info.insert
+  info.insert_info("src/tTaskMain.c")
+  info.insert_unit("src/tTECSUnit.c")
 rescue => ex
   print ex.message, "\n"
 end

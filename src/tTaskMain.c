@@ -203,12 +203,9 @@ eBody_main(CELLIDX idx)
     printf( "--- TECSInfo ---\n" );
 
     /* json_insert */
-	int arg1 = 5;
-	char arg2[] = "hoge";
-	double arg3 = 3.14;
-	strcpy( VAR_cell_path, "Target1" );
-	strcpy( VAR_entry_path_tmp, "eTarget1" );
-	strcpy( VAR_function_path_tmp, "double" );
+	strcpy( VAR_cell_path, "Target2" );
+	strcpy( VAR_entry_path_tmp, "eTarget2" );
+	strcpy( VAR_function_path_tmp, "add" );
     /* /json_insert */
     printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
 

@@ -1,15 +1,15 @@
-{
-  "cell":"Target1",
-  "entry":"eTarget1",
-  "function":"double",
-  "arg":[ 5, "hoge", 3.14 ],
-  "expected_value":1
-}
 // {
-  // "cell":"Target2",
-  // "entry":"eTarget2",
-  // "function":"add",
-  // "arguments":[5],
-  // "return":1
+//   "cell":"Target1",
+//   "entry":"eTarget1",
+//   "function":"double",
+//   "arg":[ 5 ],
+//   "exp_val":1
 // }
+{
+  "cell":"Target2",
+  "entry":"eTarget2",
+  "function":"add",
+  "arg":[5,3],
+  "exp_val":8
+}
 
