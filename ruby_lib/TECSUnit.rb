@@ -1,4 +1,4 @@
-class TECSInfo
+class TECSUnit
 
   def initialize( json_hash )
     @lines = []
@@ -8,12 +8,11 @@ class TECSInfo
     @arg = @target["arg"]
   end
 
-  def insert_info( file_name )
+  def insert_unit( file_name )
     search_idx( file_name, "json_insert" )
     if @insert_idx + 1 == @delete_idx then
-      add_text( "\tstrcpy( VAR_cell_path, \"#{@target["cell"]}\" );\n" )
-      add_text( "\tstrcpy( VAR_entry_path_tmp, \"#{@target["entry"]}\" );\n" )
-      add_text( "\tstrcpy( VAR_function_path_tmp, \"#{@target["function"]}\" );\n" )
+      add_arg
+      add_exp
     end
     insert_lines( file_name )
   end

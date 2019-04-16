@@ -97,7 +97,7 @@ $(_TECS_OBJ_DIR)%.o : %.c
 
 .PHONY: insert
 insert:
-	ruby $(TECS_UNIT_RUBY)/insert_info.rb
+	ruby $(TECS_UNIT_RUBY)/insert.rb
 .PHONY: delete
 delete:
-	ruby $(TECS_UNIT_RUBY)/clean_info.rb
+	ruby $(TECS_UNIT_RUBY)/clean.rb

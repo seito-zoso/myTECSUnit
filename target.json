@@ -10,6 +10,6 @@
   "entry":"eTarget2",
   "function":"add",
   "arg":[5,3],
-  "exp_val":8
+  "exp_val":2
 }
 

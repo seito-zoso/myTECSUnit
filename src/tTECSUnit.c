@@ -188,7 +188,7 @@ eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const
     /* json_insert */
 	int arg1 = 5;
 	int arg2 = 3;
-	int exp_val = 8;
+	int exp_val = 2;
 	int ret_val;
     /* /json_insert */
 
@@ -214,7 +214,7 @@ eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const
             cUnitTest2_set_descriptor( Target2Desc );
             if( !strcmp( function_path, "add" ) ){
                 ret_val = cUnitTest2_add( arg1, arg2 );
-                if( ret_val == ret_val ){
+                if( ret_val == exp_val ){
                     printf("OK: function \"%s\" returned expected %d\n", function_path, ret_val );
                 }else{
                     printf("NG: you expected %d ,but function \"%s\" returned %d\n", exp_val, function_path, ret_val );
