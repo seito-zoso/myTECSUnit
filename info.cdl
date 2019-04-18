@@ -36,6 +36,8 @@ celltype tTaskMain {
     var{
         int arg_num;
         [size_is(NAME_LEN)]
+            char_t  *json_str;
+        [size_is(NAME_LEN)]
             char_t  *cell_path;
         [size_is(NAME_LEN)]
             char_t  *celltype_path;

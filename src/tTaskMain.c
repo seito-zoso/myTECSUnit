@@ -5,6 +5,7 @@
  * 属性アクセスマクロ #_CAAM_#
  * NAME_LEN         int16_t          ATTR_NAME_LEN
  * arg_num          int              VAR_arg_num
+ * json_str         char_t*          VAR_json_str
  * cell_path        char_t*          VAR_cell_path
  * celltype_path    char_t*          VAR_celltype_path
  * entry_path       char_t*          VAR_entry_path
@@ -148,12 +149,16 @@
 /* プロトタイプ宣言や変数の定義をここに書きます #_PAC_# */
 #include "tTaskMain_tecsgen.h"
 #include <stdio.h>
+#include <jsmn.h>
+#define N 64
 
 #ifndef E_OK
 #define E_OK    0       /* success */
 #define E_ID    (-18)   /* illegal ID */
 #endif
 
+static void
+json_open( CELLCB *p_cellcb );
 static void
 print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag );
 static void
@@ -202,31 +207,77 @@ eBody_main(CELLIDX idx)
     int flag = 0;
     printf( "--- TECSInfo ---\n" );
 
+    jsmn_parser p;
+    jsmntok_t t[128]; /* We expect no more than 128 tokens */
+
+    json_open( p_cellcb );
     /* json_insert */
 	strcpy( VAR_cell_path, "Target2" );
 	strcpy( VAR_entry_path_tmp, "eTarget2" );
 	strcpy( VAR_function_path_tmp, "add" );
-    /* /json_insert */
-    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
+ //    /* /json_insert */
+ //    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
 
-    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
-    if( flag ){
-      return;
-    }else if( isNull(VAR_entry_path) ){
-      printf("error : entry %s not found\n", VAR_entry_path_tmp );
-      return;
-    }else if( isNull(VAR_function_path) ){
-      printf("error : function %s not found\n", VAR_function_path_tmp );
-      return;
-    }
-    /* arg_typeが最後の一つのみに対応してしまっている。 */
-    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
-    cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
+ //    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
+ //    if( flag ){
+ //      return;
+ //    }else if( isNull(VAR_entry_path) ){
+ //      printf("error : entry %s not found\n", VAR_entry_path_tmp );
+ //      return;
+ //    }else if( isNull(VAR_function_path) ){
+ //      printf("error : function %s not found\n", VAR_function_path_tmp );
+ //      return;
+ //    }
+ //    /* arg_typeが最後の一つのみに対応してしまっている。 */
+ //    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
+ //    cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
 }
 
 /* #[<POSTAMBLE>]#
  *   これより下に非受け口関数を書きます
  * #[</POSTAMBLE>]#*/
+static void
+json_open( CELLCB *p_cellcb ){
+    char str_tmp[N];
+    int co_flag = 0, co_start, i, j;
+    FILE *fp;
+
+    if( ( fp = fopen("target.json", "r") ) == NULL ){
+        printf("Failed to open\n");
+        return;
+    }
+    while( fgets( str_tmp , N, fp ) != NULL ) {
+        co_start = 0;
+        for( i = 0; i < N -1; i++ ){
+            if( str_tmp[i] == '/' && str_tmp[i+1] == '/' && !co_flag ){
+                str_tmp[i] = '\0';
+                break;
+            }
+            if( str_tmp[i] == '/' && str_tmp[i+1] == '*' && !co_flag ){
+                co_start = i;
+                co_flag = 1;
+            }
+            if( str_tmp[i] == '*' && str_tmp[i+1] == '/' && co_flag ){
+                for(j = 0; str_tmp[(i+2)+j] != '\0'; j++ ){
+                    str_tmp[co_start + j] = str_tmp[(i+2)+j];
+                }
+                str_tmp[co_start + j] = '\0';
+                i = co_start;
+                co_flag = 0;
+            }
+        }
+        if( co_flag && co_start > 0 ){
+            str_tmp[co_start] = '\0';
+            strcat( VAR_json_str, str_tmp );
+        }
+        if( str_tmp[0] != '\0' && str_tmp[0] != '\n' && !co_flag ){
+            strcat( VAR_json_str, str_tmp );
+        }
+    }
+    printf( "%s\n", VAR_json_str );
+    fclose( fp );
+}
+
 static void
 print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag )
 {
