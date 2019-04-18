@@ -1,0 +1,12 @@
+signature sJSMN{
+  void json_open( [out,size_is(btr)] char_t *str, [in] int btr );
+  void json_parse( [in,string] const char_t *str,
+    [out,size_is(btr)] char_t *c_path,
+    [out,size_is(btr)] char_t *e_path,
+    [out,size_is(btr)] char_t *f_path,
+    [in] int btr );
+};
+
+celltype tJSMN {
+  entry sJSMN eJSMN;
+};

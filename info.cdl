@@ -3,10 +3,12 @@ import( <TECSInfo.cdl> );
 import( <TECSInfoAccessor.cdl> );
 import("target.cdl");
 import("TECSUnit.cdl");
+import("jsmn.cdl");
 
 celltype tTaskMain {
     entry sTaskBody            eBody;
     call  sTECSUnit            cUnit;
+    call  sJSMN                cJSMN;
 
     call  nTECSInfo::sTECSInfo cTECSInfo;
     [dynamic,optional]
@@ -69,9 +71,12 @@ region rTEMP{
     cell tTaskMain TaskMain {
         cTECSInfo  = TECSInfo.eTECSInfo;
         cUnit = TECSUnit.eUnit;
+        cJSMN = JSMN.eJSMN;
     };
     cell tTECSUnit TECSUnit {
         cTECSInfo  = TECSInfo.eTECSInfo;
+    };
+    cell tJSMN JSMN {
     };
 /******* TECSInfo cell *******/
     cell nTECSInfo::tTECSInfo TECSInfo {
