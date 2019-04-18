@@ -160,6 +160,13 @@
 static void
 json_open( CELLCB *p_cellcb );
 static void
+json_parse( CELLCB *p_cellcb );
+static int
+jsoneq( const char *json, jsmntok_t *tok, const char *s);
+static void
+strcpy_n( char_t *str1, int num, const char *str2 );
+
+static void
 print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag );
 static void
 print_cell( CELLCB *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc );
@@ -206,30 +213,23 @@ eBody_main(CELLIDX idx)
     /* ここに処理本体を記述します #_TEFB_# */
     int flag = 0;
     printf( "--- TECSInfo ---\n" );
-
-    jsmn_parser p;
-    jsmntok_t t[128]; /* We expect no more than 128 tokens */
-
     json_open( p_cellcb );
-    /* json_insert */
-	strcpy( VAR_cell_path, "Target2" );
-	strcpy( VAR_entry_path_tmp, "eTarget2" );
-	strcpy( VAR_function_path_tmp, "add" );
- //    /* /json_insert */
- //    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
+    json_parse( p_cellcb );
 
- //    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
- //    if( flag ){
- //      return;
- //    }else if( isNull(VAR_entry_path) ){
- //      printf("error : entry %s not found\n", VAR_entry_path_tmp );
- //      return;
- //    }else if( isNull(VAR_function_path) ){
- //      printf("error : function %s not found\n", VAR_function_path_tmp );
- //      return;
- //    }
- //    /* arg_typeが最後の一つのみに対応してしまっている。 */
- //    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
+    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
+
+    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
+    if( flag ){
+      return;
+    }else if( isNull(VAR_entry_path) ){
+      printf("error : entry %s not found\n", VAR_entry_path_tmp );
+      return;
+    }else if( isNull(VAR_function_path) ){
+      printf("error : function %s not found\n", VAR_function_path_tmp );
+      return;
+    }
+    /* arg_typeが最後の一つのみに対応してしまっている。 */
+    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
  //    cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
 }
 
@@ -274,9 +274,77 @@ json_open( CELLCB *p_cellcb ){
             strcat( VAR_json_str, str_tmp );
         }
     }
-    printf( "%s\n", VAR_json_str );
     fclose( fp );
 }
+static void
+json_parse( CELLCB *p_cellcb ){
+    int r, i;
+    jsmn_parser p;
+    jsmntok_t t[128]; /* We expect no more than 128 tokens */
+
+    jsmn_init(&p);
+    r = jsmn_parse(&p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]));
+    if (r < 0) {
+        printf("Failed to parse JSON: %d\n", r);
+        return;
+    }
+
+    /* Assume the top-level element is an object */
+    if (r < 1 || t[0].type != JSMN_OBJECT) {
+        printf("Object expected\n");
+        return;
+    }
+    /* Loop over all keys of the root object */
+    for (i = 1; i < r; i++) {
+        if (jsoneq(VAR_json_str, &t[i], "cell") == 0) {
+            strcpy_n( VAR_cell_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
+            i++;
+        } else if (jsoneq(VAR_json_str, &t[i], "entry") == 0) {
+            strcpy_n( VAR_entry_path_tmp, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
+            i++;
+        } else if (jsoneq(VAR_json_str, &t[i], "function") == 0) {
+            strcpy_n( VAR_function_path_tmp, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
+            i++;
+        } else if (jsoneq(VAR_json_str, &t[i], "arg") == 0) {
+            int j;
+            // printf("- Arg:\n");
+            if (t[i+1].type != JSMN_ARRAY) {
+                continue; /* We expect groups to be an array of strings */
+            }
+            for (j = 0; j < t[i+1].size; j++) {
+                jsmntok_t *g = &t[i+j+2];
+                // printf("  * %.*s\n", g->end - g->start, VAR_json_str + g->start);
+            }
+            i += t[i+1].size + 1;
+        } else if (jsoneq(VAR_json_str, &t[i], "exp_val") == 0) {
+            /* We may want to do strtol() here to get numeric value */
+            // printf("- Exp_val: %.*s\n", t[i+1].end-t[i+1].start,
+            //         VAR_json_str + t[i+1].start);
+            i++;
+        } else {
+            printf("Unexpected key: %.*s\n", t[i].end-t[i].start,
+                    VAR_json_str + t[i].start);
+        }
+    }
+}
+
+static int
+jsoneq(const char *json, jsmntok_t *tok, const char *s) {
+    if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
+            strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
+        return 0;
+    }
+    return -1;
+}
+
+static void
+strcpy_n( char_t *str1, int num, const char *str2 ){
+    int i;
+    for(i = 0; i < num; i++){
+        str1[i] = str2[i];
+    }
+}
+
 
 static void
 print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag )
