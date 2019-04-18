@@ -30,7 +30,7 @@ CFLAGS = $(INCLUDES) $(DEFINES) -D  "Inline=static inline"
 LD = gcc
 
 #default Liknker Options
-LDFLAGS =
+LDFLAGS = -L $(JSMN_DIR)
 
 #default source directory
 SRC_DIR = $(BASE_DIR)/src
@@ -60,7 +60,7 @@ vpath %.c $(SRC_DIR) $(GEN_DIR)  ../test/cygwin $(TECSPATH) $(TECSPATH)/mruby $(
 vpath %.h $(SRC_DIR) $(GEN_DIR)  ../test/cygwin $(TECSPATH) $(TECSPATH)/mruby $(TECSPATH)/posix $(TECSPATH)/rpc $(TECSPATH)/TECSInfo $(TECSPATH)/TLSFMalloc
 
 # Other objects (out of tecsgen)
-OTHER_OBJS =                      # Add objects out of tecs care.
+OTHER_OBJS = $(JSMN_DIR)/libjsmn.a              # Add objects out of tecs care.
 # OTHER_OBJS = $(_TECS_OBJ_DIR)vasyslog.o
 # ルール #_MRUL_#
 allall: tecs delete insert
