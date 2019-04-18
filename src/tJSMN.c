@@ -157,6 +157,30 @@ eJSMN_json_parse(CELLIDX idx, const char_t* str, char_t* c_path, char_t* e_path,
     }
 }
 
+/* #[<ENTRY_FUNC>]# eJSMN_json_arg
+ * name:         eJSMN_json_arg
+ * global_name:  tJSMN_eJSMN_json_arg
+ * oneway:       false
+ * #[</ENTRY_FUNC>]# */
+void
+eJSMN_json_arg(CELLIDX idx, struct arg* obj, int btr)
+{
+	CELLCB	*p_cellcb;
+	if (VALID_IDX(idx)) {
+		p_cellcb = GET_CELLCB(idx);
+	}
+	else {
+		/* エラー処理コードをここに記述します */
+	} /* end if VALID_IDX(idx) */
+
+	/* ここに処理本体を記述します #_TEFB_# */
+		    strcpy(obj->type,"double");
+    strcpy(obj->cont,"str");
+	obj->n = 10;
+	// strcpy( obj->type, "int" );
+	// printf("%s\n", obj->type );
+}
+
 /* #[<POSTAMBLE>]#
  *   これより下に非受け口関数を書きます
  * #[</POSTAMBLE>]#*/

@@ -153,6 +153,7 @@
 #include "tTaskMain_tecsgen.h"
 #include <stdio.h>
 #include <jsmn.h>
+// #include "json_struct.h"
 
 #ifndef E_OK
 #define E_OK    0       /* success */
@@ -204,28 +205,41 @@ eBody_main(CELLIDX idx)
     } /* end if VALID_IDX(idx) */
 
     /* ここに処理本体を記述します #_TEFB_# */
-    int flag = 0;
-    printf( "--- TECSInfo ---\n" );
-    // json_open( p_cellcb );
-    // json_parse( p_cellcb );
-    cJSMN_json_open( VAR_json_str, ATTR_NAME_LEN );
-    cJSMN_json_parse( VAR_json_str, VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
+    struct arg obj;
+    obj.n = 5;
+    strcpy(obj.type,"int");
+    printf("%s\n",obj.type);
 
-    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
+    strcpy(obj.cont,"int");
+    printf("%s\n",obj.cont);
 
-    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
-    if( flag ){
-      return;
-    }else if( isNull(VAR_entry_path) ){
-      printf("error : entry %s not found\n", VAR_entry_path_tmp );
-      return;
-    }else if( isNull(VAR_function_path) ){
-      printf("error : function %s not found\n", VAR_function_path_tmp );
-      return;
-    }
-    /* arg_typeが最後の一つのみに対応してしまっている。 */
-    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
- //    cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
+    // printf("start\n");
+    // printf("%d\n",obj->n);
+    cJSMN_json_arg( &obj, ATTR_NAME_LEN );
+    printf("%s,%s,%d",obj.type,obj.cont,obj.n);
+
+    // printf("%d\n",obj->n);
+
+ //    int flag = 0;
+ //    printf( "--- TECSInfo ---\n" );
+ //    cJSMN_json_open( VAR_json_str, ATTR_NAME_LEN );
+ //    cJSMN_json_parse( VAR_json_str, VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
+
+ //    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
+
+ //    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
+ //    if( flag ){
+ //      return;
+ //    }else if( isNull(VAR_entry_path) ){
+ //      printf("error : entry %s not found\n", VAR_entry_path_tmp );
+ //      return;
+ //    }else if( isNull(VAR_function_path) ){
+ //      printf("error : function %s not found\n", VAR_function_path_tmp );
+ //      return;
+ //    }
+ //    /* arg_typeが最後の一つのみに対応してしまっている。 */
+ //    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
+ // //    cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
 }
 
 /* #[<POSTAMBLE>]#

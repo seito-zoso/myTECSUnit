@@ -1,3 +1,5 @@
+import_C("json_struct.h");
+
 signature sJSMN{
   void json_open( [out,size_is(btr)] char_t *str, [in] int btr );
   void json_parse( [in,string] const char_t *str,
@@ -5,6 +7,7 @@ signature sJSMN{
     [out,size_is(btr)] char_t *e_path,
     [out,size_is(btr)] char_t *f_path,
     [in] int btr );
+  void json_arg( [out,size_is(btr)] struct arg *obj, [in] int btr );
 };
 
 celltype tJSMN {
