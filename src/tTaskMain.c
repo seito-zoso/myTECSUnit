@@ -18,9 +18,9 @@
  * call port: cUnit signature: sTECSUnit context:task
  *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path );
  * call port: cJSMN signature: sJSMN context:task
- *   void           cJSMN_json_open( );
- *   void           cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, int btr );
- *   void           cJSMN_json_arg( struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int btr );
+ *   int            cJSMN_json_open( );
+ *   int            cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, int btr );
+ *   int            cJSMN_json_arg( struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int btr );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -210,9 +210,12 @@ eBody_main(CELLIDX idx)
     int i, arg_num, flag;
 
     printf( "--- JSON ---\n" );
-    cJSMN_json_open();
-    cJSMN_json_arg( arguments, exp_val, ATTR_NAME_LEN );
-    cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
+    ercd = cJSMN_json_open();
+    if( ercd != E_OK ) return;
+    ercd = cJSMN_json_arg( arguments, exp_val, ATTR_NAME_LEN );
+    if( ercd != E_OK ) return;
+    ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
+    if( ercd != E_OK ) return;
 
     printf( "- Cell: \"%s\"\n", VAR_cell_path );
     printf( "- Entry: \"%s\"\n", VAR_entry_path_tmp );
@@ -250,10 +253,10 @@ eBody_main(CELLIDX idx)
     if( flag ){
         return;
     }else if( isNull(VAR_entry_path) ){
-        printf("error : entry %s not found\n", VAR_entry_path_tmp );
+        printf( "Error: Entry \"%s\" cannot found\n", VAR_entry_path_tmp );
         return;
     }else if( isNull(VAR_function_path) ){
-        printf("error : function %s not found\n", VAR_function_path_tmp );
+        printf( "Error: Function \"%s\" cannot found\n", VAR_function_path_tmp );
         return;
     }
     /* arg_typeが最後の一つのみに対応してしまっている。 */
@@ -286,7 +289,7 @@ print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag )
     }
     else{
         *flag = 1;
-        printf( "cell %s not found\n", path );
+        printf( "Eroor: Cell \"%s\" cannot found\n", path );
     }
 }
 

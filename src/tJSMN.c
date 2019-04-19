@@ -43,7 +43,7 @@ strcpy_n( char_t *str1, int num, const char *str2 );
  * global_name:  tJSMN_eJSMN_json_open
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-void
+ER
 eJSMN_json_open(CELLIDX idx)
 {
 	CELLCB	*p_cellcb;
@@ -61,7 +61,7 @@ eJSMN_json_open(CELLIDX idx)
 
     if( ( fp = fopen("target.json", "r") ) == NULL ){
         printf("Failed to open\n");
-        return;
+        return -1;
     }
     while( fgets( str_tmp , N, fp ) != NULL ) {
         co_start = 0;
@@ -92,6 +92,7 @@ eJSMN_json_open(CELLIDX idx)
         }
     }
     fclose( fp );
+    return 0;
 }
 
 /* #[<ENTRY_FUNC>]# eJSMN_json_parse
@@ -99,7 +100,7 @@ eJSMN_json_open(CELLIDX idx)
  * global_name:  tJSMN_eJSMN_json_parse
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-void
+ER
 eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, int btr)
 {
 	CELLCB	*p_cellcb;
@@ -119,12 +120,12 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
     r = jsmn_parse( &p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]) );
     if(r < 0){
         printf( "Failed to parse JSON: %d\n", r );
-        return;
+        return -1;
     }
   /* Assume the top-level element is an object */
     if( r < 1 || t[0].type != JSMN_OBJECT ){
         printf( "Object expected\n" );
-        return;
+        return -1;
     }
   /* Loop over all keys of the root object */
     for(i = 1; i < r; i++){
@@ -151,8 +152,10 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
             i++;
         }else{
             printf( "Unexpected key: %.*s\n", t[i].end-t[i].start, VAR_json_str + t[i].start );
+            return -1;
         }
     }
+    return 0;
 }
 
 /* #[<ENTRY_FUNC>]# eJSMN_json_arg
@@ -160,7 +163,7 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
  * global_name:  tJSMN_eJSMN_json_arg
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
-void
+ER
 eJSMN_json_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int btr)
 {
 	CELLCB	*p_cellcb;
@@ -181,12 +184,12 @@ eJSMN_json_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsunit_obj*
     r = jsmn_parse( &p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]) );
     if( r < 0 ){
         printf( "Failed to parse JSON: %d\n", r );
-        return;
+        return -1;
     }
     /* Assume the top-level element is an object */
     if( r < 1 || t[0].type != JSMN_OBJECT ){
         printf( "Object expected\n" );
-        return;
+        return -1;
     }
   /* Loop over all keys of the root object */
     for( i = 1; i < r; i++ ){
@@ -242,8 +245,10 @@ eJSMN_json_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsunit_obj*
             i++;
 	    }else{
 	        printf( "Unexpected key: %.*s\n", t[i].end-t[i].start, VAR_json_str + t[i].start );
+            return -1;
 	    }
 	}
+    return 0;
 }
 
 /* #[<POSTAMBLE>]#
