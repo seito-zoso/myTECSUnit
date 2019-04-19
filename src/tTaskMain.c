@@ -19,8 +19,8 @@
  *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path );
  * call port: cJSMN signature: sJSMN context:task
  *   void           cJSMN_json_open( );
- *   void           cJSMN_json_parse( const char_t* str, char_t* c_path, char_t* e_path, char_t* f_path, int btr );
- *   void           cJSMN_json_arg( struct arg* obj, int btr );
+ *   void           cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, int btr );
+ *   void           cJSMN_json_arg( struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int btr );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -205,41 +205,42 @@ eBody_main(CELLIDX idx)
     } /* end if VALID_IDX(idx) */
 
     /* ここに処理本体を記述します #_TEFB_# */
-    struct arg obj;
-    // obj.n = 5;
-    // strcpy(obj.type,"int");
-    // printf("%s\n",obj.type);
+    struct tecsunit_obj arguments[5];
+    struct tecsunit_obj exp_val[5];
+    int i;
 
-    // strcpy(obj.cont,"int");
-    // printf("%s\n",obj.cont);
-
-    // // printf("start\n");
-    // // printf("%d\n",obj->n);
-    cJSMN_json_arg( &obj, ATTR_NAME_LEN );
-    // printf("%s,%s,%d",obj.type,obj.cont,obj.n);
-
-    // printf("%d\n",obj->n);
-
- //    int flag = 0;
     printf( "--- TECSInfo ---\n" );
     cJSMN_json_open();
+    cJSMN_json_arg( arguments, exp_val, ATTR_NAME_LEN );
     cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
 
     printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
 
- //    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
- //    if( flag ){
- //      return;
- //    }else if( isNull(VAR_entry_path) ){
- //      printf("error : entry %s not found\n", VAR_entry_path_tmp );
- //      return;
- //    }else if( isNull(VAR_function_path) ){
- //      printf("error : function %s not found\n", VAR_function_path_tmp );
- //      return;
- //    }
- //    /* arg_typeが最後の一つのみに対応してしまっている。 */
- //    printf("=> celltype = \"%s\", signature = \"%s\", # of arg = %d\n\n", VAR_celltype_path, VAR_signature_path, VAR_arg_num );
- // //    cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
+    printf( "- Arguments\n" );
+    for(i = 0; i < 5; i++){
+        if(!strcmp(arguments[i].type,"char")){
+            printf( " char \"%s\"\n", arguments[i].str );
+        }else if(!strcmp(arguments[i].type,"int")){
+            printf( " int %d\n", arguments[i].int_num );
+        }else if(!strcmp(arguments[i].type,"double")){
+            printf( " double %lf\n", arguments[i].double_num );
+        }else{
+            break;
+        }
+    }
+    printf( "- Expected Value\n" );
+    for(i = 0; i < 5; i++){
+        if(!strcmp(exp_val[i].type,"char")){
+            printf( " char \"%s\"\n", exp_val[i].str );
+        }else if(!strcmp(exp_val[i].type,"int")){
+            printf( " int %d\n", exp_val[i].int_num );
+        }else if(!strcmp(exp_val[i].type,"double")){
+            printf( " double %lf\n", exp_val[i].double_num );
+        }else{
+            break;
+        }
+    }
+
 }
 
 /* #[<POSTAMBLE>]#

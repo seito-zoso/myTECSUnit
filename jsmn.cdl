@@ -7,7 +7,10 @@ signature sJSMN{
     [out,size_is(btr)] char_t *e_path,
     [out,size_is(btr)] char_t *f_path,
     [in] int btr );
-  void json_arg( [out,size_is(btr)] struct arg *obj, [in] int btr );
+  void json_arg(
+    [out,size_is(btr)] struct tecsunit_obj *arguments,
+    [out,size_is(btr)] struct tecsunit_obj *exp_val,
+    [in] int btr );
 };
 
 celltype tJSMN {

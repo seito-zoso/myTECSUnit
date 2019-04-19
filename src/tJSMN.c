@@ -116,50 +116,41 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
     jsmntok_t t[128]; /* We expect no more than 128 tokens */
 
     jsmn_init(&p);
-    r = jsmn_parse(&p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]));
-    if (r < 0) {
-        printf("Failed to parse JSON: %d\n", r);
+    r = jsmn_parse( &p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]) );
+    if(r < 0){
+        printf( "Failed to parse JSON: %d\n", r );
         return;
     }
-
-    /* Assume the top-level element is an object */
-    if (r < 1 || t[0].type != JSMN_OBJECT) {
-        printf("Object expected\n");
+  /* Assume the top-level element is an object */
+    if( r < 1 || t[0].type != JSMN_OBJECT ){
+        printf( "Object expected\n" );
         return;
     }
-    /* Loop over all keys of the root object */
-    for (i = 1; i < r; i++) {
-        if (jsoneq(VAR_json_str, &t[i], "cell") == 0) {
+  /* Loop over all keys of the root object */
+    for(i = 1; i < r; i++){
+        if( jsoneq( VAR_json_str, &t[i], "cell" ) == 0 ){
             strcpy_n( c_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
-            printf( "%d\n", t[i+1].type );
             i++;
-        } else if (jsoneq( VAR_json_str, &t[i], "entry") == 0) {
+        }else if( jsoneq( VAR_json_str, &t[i], "entry" ) == 0 ){
             strcpy_n( e_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
-            printf( "%d\n", t[i+1].type );
             i++;
-        } else if (jsoneq( VAR_json_str, &t[i], "function") == 0) {
+        }else if( jsoneq( VAR_json_str, &t[i], "function" ) == 0 ){
             strcpy_n( f_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
-            printf( "%d\n", t[i+1].type );
             i++;
-        } else if (jsoneq( VAR_json_str, &t[i], "arg") == 0) {
+        }else if( jsoneq( VAR_json_str, &t[i], "arg" ) == 0 ){
             int j;
-            // printf("- Arg:\n");
-            if (t[i+1].type != JSMN_ARRAY) {
+            if( t[i+1].type != JSMN_ARRAY ){
                 continue; /* We expect groups to be an array of strings */
             }
-            for (j = 0; j < t[i+1].size; j++) {
+            for( j = 0; j < t[i+1].size; j++ ) {
                 jsmntok_t *g = &t[i+j+2];
-                // printf("  * %.*s\n", g->end - g->start, VAR_json_str + g->start);
             }
             i += t[i+1].size + 1;
-        } else if (jsoneq( VAR_json_str, &t[i], "exp_val") == 0) {
-            /* We may want to do strtol() here to get numeric value */
-            // printf("- Exp_val: %.*s\n", t[i+1].end-t[i+1].start,
-            //         VAR_json_str + t[i+1].start);
+        }else if( jsoneq( VAR_json_str, &t[i], "exp_val" ) == 0 ) {
+          /* We may want to do strtol() here to get numeric value */
             i++;
-        } else {
-            printf("Unexpected key: %.*s\n", t[i].end-t[i].start,
-                    VAR_json_str + t[i].start);
+        }else{
+            printf( "Unexpected key: %.*s\n", t[i].end-t[i].start, VAR_json_str + t[i].start );
         }
     }
 }
@@ -170,7 +161,7 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-eJSMN_json_arg(CELLIDX idx, struct arg* obj, int btr)
+eJSMN_json_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int btr)
 {
 	CELLCB	*p_cellcb;
 	if (VALID_IDX(idx)) {
@@ -181,74 +172,99 @@ eJSMN_json_arg(CELLIDX idx, struct arg* obj, int btr)
 	} /* end if VALID_IDX(idx) */
 
 	/* ここに処理本体を記述します #_TEFB_# */
-	// 	    strcpy(obj->type,"double");
- //    strcpy(obj->cont,"VAR_json_str");
-	// obj->n = 10;
-	// strcpy( obj->type, "int" );
-	// printf("%s\n", obj->type );
-  int r, i;
-  jsmn_parser p;
-  jsmntok_t t[128]; /* We expect no more than 128 tokens */
+    int r, i, j;
+    jsmn_parser p;
+    jsmntok_t t[128]; /* We expect no more than 128 tokens */
+    char str_tmp[8];
 
-  jsmn_init(&p);
-  r = jsmn_parse(&p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]));
-  if (r < 0) {
-      printf("Failed to parse JSON: %d\n", r);
-      return;
-  }
-
-    /* Assume the top-level element is an object */
-  if (r < 1 || t[0].type != JSMN_OBJECT) {
-      printf("Object expected\n");
-      return;
-  }
-  /* Loop over all keys of the root object */
-  for (i = 1; i < r; i++) {
-  	if (jsoneq(VAR_json_str, &t[i], "cell") == 0) {
-        i++;
-    } else if (jsoneq( VAR_json_str, &t[i], "entry") == 0) {
-        i++;
-    } else if (jsoneq( VAR_json_str, &t[i], "function") == 0) {
-        i++;
-		} else if (jsoneq( VAR_json_str, &t[i], "arg") == 0) {
-        int j;
-        // printf("- Arg:\n");
-        if (t[i+1].type != JSMN_ARRAY) {
-            continue; /* We expect groups to be an array of strings */
-        }
-        for (j = 0; j < t[i+1].size; j++) {
-            jsmntok_t *g = &t[i+j+2];
-            // printf("  * %.*s\n", g->end - g->start, VAR_json_str + g->start);
-        }
-        i += t[i+1].size + 1;
-    } else if (jsoneq( VAR_json_str, &t[i], "exp_val") == 0) {
-        /* We may want to do strtol() here to get numeric value */
-        printf("- Exp_val: %.*s\n", t[i+1].end-t[i+1].start,
-                VAR_json_str + t[i+1].start);
-        i++;
-    } else {
-        printf("Unexpected key: %.*s\n", t[i].end-t[i].start,
-                VAR_json_str + t[i].start);
+    jsmn_init(&p);
+    r = jsmn_parse( &p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]) );
+    if( r < 0 ){
+        printf( "Failed to parse JSON: %d\n", r );
+        return;
     }
-  }
+    /* Assume the top-level element is an object */
+    if( r < 1 || t[0].type != JSMN_OBJECT ){
+        printf( "Object expected\n" );
+        return;
+    }
+  /* Loop over all keys of the root object */
+    for( i = 1; i < r; i++ ){
+        if( jsoneq( VAR_json_str, &t[i], "cell" ) == 0 ){
+            i++;
+	    }else if( jsoneq( VAR_json_str, &t[i], "entry" ) == 0 ){
+	        i++;
+	    }else if( jsoneq( VAR_json_str, &t[i], "function") == 0 ){
+	        i++;
+		}else if( jsoneq( VAR_json_str, &t[i], "arg") == 0 ) {
+	        if(t[i+1].type != JSMN_ARRAY){
+                continue; /* We expect groups to be an array of strings */
+            }
+            for( j = 0; j < t[i+1].size; j++ ){
+                jsmntok_t *g = &t[i+j+2];
+	      		if( g->type == JSMN_STRING ){
+	          		strcpy( arguments[j].type, "char" );
+	          		strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
+	      		}else if( g->type == JSMN_PRIMITIVE ){
+	          		strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
+	          		if( strstr( arguments[j].str, "." ) ){
+	          	  		strcpy( arguments[j].type, "double" );
+	            		arguments[j].double_num = atof( arguments[j].str );
+	          		}else{
+	            		strcpy( arguments[j].type, "int" );
+	          			arguments[j].int_num = atoi( arguments[j].str );
+	          		}
+	      		}else if( g->type == JSMN_UNDEFINED ){
+	          		strcpy( arguments[j].type, "undefined" );
+	      			printf( "Unexpected value: %.*s\n", g->end - g->start, VAR_json_str + g->start );
+	      		}
+            }
+            i += t[i+1].size + 1;
+	    }else if( jsoneq( VAR_json_str, &t[i], "exp_val" ) == 0 ){
+	        /* We may want to do strtol() here to get numeric value */
+		    if( t[i+1].type == JSMN_STRING ){
+	      	    strcpy( exp_val->type, "char" );
+	      	    strcpy_n( exp_val->str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
+	  		}else if( t[i+1].type == JSMN_PRIMITIVE ){
+	      	    strcpy_n( exp_val->str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
+                if( strstr( exp_val->str, "." ) ){
+                    strcpy( exp_val->type, "double" );
+    	        	exp_val->double_num = atof( exp_val->str );
+    	      	}else{
+    	        	strcpy( exp_val->type, "int" );
+    	      		exp_val->int_num = atoi( exp_val->str );
+    	      	}
+	  		}else if( t[i+1].type == JSMN_UNDEFINED ){
+	      	    strcpy( exp_val->type, "undefined" );
+	  			printf( "Unexpected value: %.*s\n", t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
+	  		}
+            strcpy_n( str_tmp, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
+            i++;
+	    }else{
+	        printf( "Unexpected key: %.*s\n", t[i].end-t[i].start, VAR_json_str + t[i].start );
+	    }
+	}
 }
 
 /* #[<POSTAMBLE>]#
  *   これより下に非受け口関数を書きます
  * #[</POSTAMBLE>]#*/
 static int
-jsoneq(const char *json, jsmntok_t *tok, const char *s) {
-    if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
-            strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
+jsoneq(const char *json, jsmntok_t *tok, const char *s)
+{
+    if( tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start
+        && strncmp(json + tok->start, s, tok->end - tok->start) == 0 ){
         return 0;
     }
     return -1;
 }
 
 static void
-strcpy_n( char_t *str1, int num, const char *str2 ){
+strcpy_n( char_t *str1, int num, const char *str2 )
+{
     int i;
     for(i = 0; i < num; i++){
         str1[i] = str2[i];
     }
+    str1[num] = '\0';
 }

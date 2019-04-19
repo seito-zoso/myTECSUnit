@@ -2,8 +2,8 @@
   "cell":"Target1",
   "entry":"eTarget1",
   "function":"double",
-  "arg":[5],
-  "exp_val":1
+  "arg":[5.2,3,"hello"],
+  "exp_val":1.5
 }
 // {
 //   "cell":"Target2", /* コメントアウトもはじく */
