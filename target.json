@@ -2,7 +2,7 @@
   "cell":"Target1",
   "entry":"eTarget1",
   "function":"double",
-  "arg":[ 5 ],
+  "arg":[5],
   "exp_val":1
 }
 // {

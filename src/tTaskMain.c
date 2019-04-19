@@ -5,7 +5,6 @@
  * 属性アクセスマクロ #_CAAM_#
  * NAME_LEN         int16_t          ATTR_NAME_LEN
  * arg_num          int              VAR_arg_num
- * json_str         char_t*          VAR_json_str
  * cell_path        char_t*          VAR_cell_path
  * celltype_path    char_t*          VAR_celltype_path
  * entry_path       char_t*          VAR_entry_path
@@ -19,8 +18,9 @@
  * call port: cUnit signature: sTECSUnit context:task
  *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path );
  * call port: cJSMN signature: sJSMN context:task
- *   void           cJSMN_json_open( char_t* str, int btr );
+ *   void           cJSMN_json_open( );
  *   void           cJSMN_json_parse( const char_t* str, char_t* c_path, char_t* e_path, char_t* f_path, int btr );
+ *   void           cJSMN_json_arg( struct arg* obj, int btr );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -206,26 +206,26 @@ eBody_main(CELLIDX idx)
 
     /* ここに処理本体を記述します #_TEFB_# */
     struct arg obj;
-    obj.n = 5;
-    strcpy(obj.type,"int");
-    printf("%s\n",obj.type);
+    // obj.n = 5;
+    // strcpy(obj.type,"int");
+    // printf("%s\n",obj.type);
 
-    strcpy(obj.cont,"int");
-    printf("%s\n",obj.cont);
+    // strcpy(obj.cont,"int");
+    // printf("%s\n",obj.cont);
 
-    // printf("start\n");
-    // printf("%d\n",obj->n);
+    // // printf("start\n");
+    // // printf("%d\n",obj->n);
     cJSMN_json_arg( &obj, ATTR_NAME_LEN );
-    printf("%s,%s,%d",obj.type,obj.cont,obj.n);
+    // printf("%s,%s,%d",obj.type,obj.cont,obj.n);
 
     // printf("%d\n",obj->n);
 
  //    int flag = 0;
- //    printf( "--- TECSInfo ---\n" );
- //    cJSMN_json_open( VAR_json_str, ATTR_NAME_LEN );
- //    cJSMN_json_parse( VAR_json_str, VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
+    printf( "--- TECSInfo ---\n" );
+    cJSMN_json_open();
+    cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
 
- //    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
+    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
 
  //    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
  //    if( flag ){

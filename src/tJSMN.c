@@ -9,6 +9,10 @@
  * #[<...>]# から #[</...>]# で囲まれたコメントは編集しないでください
  * tecsmerge によるマージに使用されます
  *
+ * 属性アクセスマクロ #_CAAM_#
+ * LEN              int16_t          ATTR_LEN
+ * json_str         char_t*          VAR_json_str
+ *
  * #[</PREAMBLE>]# */
 
 /* プロトタイプ宣言や変数の定義をここに書きます #_PAC_# */
@@ -40,7 +44,7 @@ strcpy_n( char_t *str1, int num, const char *str2 );
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-eJSMN_json_open(CELLIDX idx, char_t* str, int btr)
+eJSMN_json_open(CELLIDX idx)
 {
 	CELLCB	*p_cellcb;
 	if (VALID_IDX(idx)) {
@@ -81,10 +85,10 @@ eJSMN_json_open(CELLIDX idx, char_t* str, int btr)
         }
         if( co_flag && co_start > 0 ){
             str_tmp[co_start] = '\0';
-            strcat( str, str_tmp );
+            strcat( VAR_json_str, str_tmp );
         }
         if( str_tmp[0] != '\0' && str_tmp[0] != '\n' && !co_flag ){
-            strcat( str, str_tmp );
+            strcat( VAR_json_str, str_tmp );
         }
     }
     fclose( fp );
@@ -96,7 +100,7 @@ eJSMN_json_open(CELLIDX idx, char_t* str, int btr)
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-eJSMN_json_parse(CELLIDX idx, const char_t* str, char_t* c_path, char_t* e_path, char_t* f_path, int btr)
+eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, int btr)
 {
 	CELLCB	*p_cellcb;
 	if (VALID_IDX(idx)) {
@@ -112,7 +116,7 @@ eJSMN_json_parse(CELLIDX idx, const char_t* str, char_t* c_path, char_t* e_path,
     jsmntok_t t[128]; /* We expect no more than 128 tokens */
 
     jsmn_init(&p);
-    r = jsmn_parse(&p, str, strlen(str), t, sizeof(t)/sizeof(t[0]));
+    r = jsmn_parse(&p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]));
     if (r < 0) {
         printf("Failed to parse JSON: %d\n", r);
         return;
@@ -125,16 +129,19 @@ eJSMN_json_parse(CELLIDX idx, const char_t* str, char_t* c_path, char_t* e_path,
     }
     /* Loop over all keys of the root object */
     for (i = 1; i < r; i++) {
-        if (jsoneq(str, &t[i], "cell") == 0) {
-            strcpy_n( c_path, t[i+1].end-t[i+1].start, str + t[i+1].start );
+        if (jsoneq(VAR_json_str, &t[i], "cell") == 0) {
+            strcpy_n( c_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
+            printf( "%d\n", t[i+1].type );
             i++;
-        } else if (jsoneq( str, &t[i], "entry") == 0) {
-            strcpy_n( e_path, t[i+1].end-t[i+1].start, str + t[i+1].start );
+        } else if (jsoneq( VAR_json_str, &t[i], "entry") == 0) {
+            strcpy_n( e_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
+            printf( "%d\n", t[i+1].type );
             i++;
-        } else if (jsoneq( str, &t[i], "function") == 0) {
-            strcpy_n( f_path, t[i+1].end-t[i+1].start, str + t[i+1].start );
+        } else if (jsoneq( VAR_json_str, &t[i], "function") == 0) {
+            strcpy_n( f_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
+            printf( "%d\n", t[i+1].type );
             i++;
-        } else if (jsoneq( str, &t[i], "arg") == 0) {
+        } else if (jsoneq( VAR_json_str, &t[i], "arg") == 0) {
             int j;
             // printf("- Arg:\n");
             if (t[i+1].type != JSMN_ARRAY) {
@@ -145,14 +152,14 @@ eJSMN_json_parse(CELLIDX idx, const char_t* str, char_t* c_path, char_t* e_path,
                 // printf("  * %.*s\n", g->end - g->start, VAR_json_str + g->start);
             }
             i += t[i+1].size + 1;
-        } else if (jsoneq( str, &t[i], "exp_val") == 0) {
+        } else if (jsoneq( VAR_json_str, &t[i], "exp_val") == 0) {
             /* We may want to do strtol() here to get numeric value */
             // printf("- Exp_val: %.*s\n", t[i+1].end-t[i+1].start,
             //         VAR_json_str + t[i+1].start);
             i++;
         } else {
             printf("Unexpected key: %.*s\n", t[i].end-t[i].start,
-                    str + t[i].start);
+                    VAR_json_str + t[i].start);
         }
     }
 }
@@ -174,11 +181,56 @@ eJSMN_json_arg(CELLIDX idx, struct arg* obj, int btr)
 	} /* end if VALID_IDX(idx) */
 
 	/* ここに処理本体を記述します #_TEFB_# */
-		    strcpy(obj->type,"double");
-    strcpy(obj->cont,"str");
-	obj->n = 10;
+	// 	    strcpy(obj->type,"double");
+ //    strcpy(obj->cont,"VAR_json_str");
+	// obj->n = 10;
 	// strcpy( obj->type, "int" );
 	// printf("%s\n", obj->type );
+  int r, i;
+  jsmn_parser p;
+  jsmntok_t t[128]; /* We expect no more than 128 tokens */
+
+  jsmn_init(&p);
+  r = jsmn_parse(&p, VAR_json_str, strlen(VAR_json_str), t, sizeof(t)/sizeof(t[0]));
+  if (r < 0) {
+      printf("Failed to parse JSON: %d\n", r);
+      return;
+  }
+
+    /* Assume the top-level element is an object */
+  if (r < 1 || t[0].type != JSMN_OBJECT) {
+      printf("Object expected\n");
+      return;
+  }
+  /* Loop over all keys of the root object */
+  for (i = 1; i < r; i++) {
+  	if (jsoneq(VAR_json_str, &t[i], "cell") == 0) {
+        i++;
+    } else if (jsoneq( VAR_json_str, &t[i], "entry") == 0) {
+        i++;
+    } else if (jsoneq( VAR_json_str, &t[i], "function") == 0) {
+        i++;
+		} else if (jsoneq( VAR_json_str, &t[i], "arg") == 0) {
+        int j;
+        // printf("- Arg:\n");
+        if (t[i+1].type != JSMN_ARRAY) {
+            continue; /* We expect groups to be an array of strings */
+        }
+        for (j = 0; j < t[i+1].size; j++) {
+            jsmntok_t *g = &t[i+j+2];
+            // printf("  * %.*s\n", g->end - g->start, VAR_json_str + g->start);
+        }
+        i += t[i+1].size + 1;
+    } else if (jsoneq( VAR_json_str, &t[i], "exp_val") == 0) {
+        /* We may want to do strtol() here to get numeric value */
+        printf("- Exp_val: %.*s\n", t[i+1].end-t[i+1].start,
+                VAR_json_str + t[i+1].start);
+        i++;
+    } else {
+        printf("Unexpected key: %.*s\n", t[i].end-t[i].start,
+                VAR_json_str + t[i].start);
+    }
+  }
 }
 
 /* #[<POSTAMBLE>]#
