@@ -207,39 +207,66 @@ eBody_main(CELLIDX idx)
     /* ここに処理本体を記述します #_TEFB_# */
     struct tecsunit_obj arguments[5];
     struct tecsunit_obj exp_val[5];
-    int i;
+    int i, arg_num, flag;
 
-    printf( "--- TECSInfo ---\n" );
+    printf( "--- JSON ---\n" );
     cJSMN_json_open();
     cJSMN_json_arg( arguments, exp_val, ATTR_NAME_LEN );
     cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
 
-    printf( "Target cell = \"%s\", entry = \"%s\", function = \"%s\"\n", VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp );
+    printf( "- Cell: \"%s\"\n", VAR_cell_path );
+    printf( "- Entry: \"%s\"\n", VAR_entry_path_tmp );
+    printf( "- Function: \"%s\"\n", VAR_function_path_tmp );
 
     printf( "- Arguments\n" );
-    for(i = 0; i < 5; i++){
+    for( i = 0; i < 5; i++ ){
         if(!strcmp(arguments[i].type,"char")){
-            printf( " char \"%s\"\n", arguments[i].str );
+            printf( "  %d: char  \"%s\"\n", i+1, arguments[i].str );
         }else if(!strcmp(arguments[i].type,"int")){
-            printf( " int %d\n", arguments[i].int_num );
+            printf( "  %d: int    %d\n", i+1, arguments[i].int_num );
         }else if(!strcmp(arguments[i].type,"double")){
-            printf( " double %lf\n", arguments[i].double_num );
+            printf( "  %d: double %lf\n", i+1, arguments[i].double_num );
         }else{
             break;
         }
     }
+    arg_num = i;
+
     printf( "- Expected Value\n" );
-    for(i = 0; i < 5; i++){
+    for( i = 0; i < 5; i++ ){
         if(!strcmp(exp_val[i].type,"char")){
-            printf( " char \"%s\"\n", exp_val[i].str );
+            printf( "  char  \"%s\"\n", exp_val[i].str );
         }else if(!strcmp(exp_val[i].type,"int")){
-            printf( " int %d\n", exp_val[i].int_num );
+            printf( "  int    %d\n", exp_val[i].int_num );
         }else if(!strcmp(exp_val[i].type,"double")){
-            printf( " double %lf\n", exp_val[i].double_num );
+            printf( "  double %lf\n", exp_val[i].double_num );
         }else{
             break;
         }
     }
+    puts("");
+    printf( "--- TECSInfo ---\n" );
+    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
+    if( flag ){
+        return;
+    }else if( isNull(VAR_entry_path) ){
+        printf("error : entry %s not found\n", VAR_entry_path_tmp );
+        return;
+    }else if( isNull(VAR_function_path) ){
+        printf("error : function %s not found\n", VAR_function_path_tmp );
+        return;
+    }
+    /* arg_typeが最後の一つのみに対応してしまっている。 */
+    printf( "- Celltype: \"%s\"\n", VAR_celltype_path );
+    printf( "- Signature: \"%s\"\n", VAR_signature_path );
+    printf( "- # of arg: %d\n", VAR_arg_num );
+
+    if( arg_num != VAR_arg_num ){
+        printf( "Error: Wrong number of arguments\n" );
+        printf( "  You expected %d arguments. Function \"%s\" has %d arguments\n",
+            arg_num, VAR_function_path, VAR_arg_num );
+    }
+    // cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
 
 }
 
