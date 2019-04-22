@@ -17,6 +17,11 @@ celltype tJSMN {
   entry sJSMN eJSMN;
   attr{
     int16_t LEN = 256;
+    char_t *key_cell = "cell";
+    char_t *key_entry = "entry";
+    char_t *key_function = "function";
+    char_t *key_arg = "argument";
+    char_t *key_exp = "exp_val";
   };
   var {
     [size_is(LEN)]

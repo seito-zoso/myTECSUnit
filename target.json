@@ -1,8 +1,8 @@
 {
-  "cell":"Target1",
+  "cell":"Target1", // 足りてないと怒る
   "entry":"eTarget1",
   "function":"double",
-  "arg":[5.2,3,"hello"],
+  "argument":[5.2],
   "exp_val":1.5
 }
 // {

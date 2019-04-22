@@ -11,6 +11,11 @@
  *
  * 属性アクセスマクロ #_CAAM_#
  * LEN              int16_t          ATTR_LEN
+ * key_cell         char_t*          ATTR_key_cell
+ * key_entry        char_t*          ATTR_key_entry
+ * key_function     char_t*          ATTR_key_function
+ * key_arg          char_t*          ATTR_key_arg
+ * key_exp          char_t*          ATTR_key_exp
  * json_str         char_t*          VAR_json_str
  *
  * #[</PREAMBLE>]# */
@@ -129,16 +134,16 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
     }
   /* Loop over all keys of the root object */
     for(i = 1; i < r; i++){
-        if( jsoneq( VAR_json_str, &t[i], "cell" ) == 0 ){
+        if( jsoneq( VAR_json_str, &t[i], ATTR_key_cell ) == 0 ){
             strcpy_n( c_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
             i++;
-        }else if( jsoneq( VAR_json_str, &t[i], "entry" ) == 0 ){
+        }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_entry ) == 0 ){
             strcpy_n( e_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
             i++;
-        }else if( jsoneq( VAR_json_str, &t[i], "function" ) == 0 ){
+        }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_function ) == 0 ){
             strcpy_n( f_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
             i++;
-        }else if( jsoneq( VAR_json_str, &t[i], "arg" ) == 0 ){
+        }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_arg ) == 0 ){
             int j;
             if( t[i+1].type != JSMN_ARRAY ){
                 continue; /* We expect groups to be an array of strings */
@@ -147,7 +152,7 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
                 jsmntok_t *g = &t[i+j+2];
             }
             i += t[i+1].size + 1;
-        }else if( jsoneq( VAR_json_str, &t[i], "exp_val" ) == 0 ) {
+        }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ) {
           /* We may want to do strtol() here to get numeric value */
             i++;
         }else{
@@ -193,13 +198,13 @@ eJSMN_json_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsunit_obj*
     }
   /* Loop over all keys of the root object */
     for( i = 1; i < r; i++ ){
-        if( jsoneq( VAR_json_str, &t[i], "cell" ) == 0 ){
+        if( jsoneq( VAR_json_str, &t[i], ATTR_key_cell ) == 0 ){
             i++;
-	    }else if( jsoneq( VAR_json_str, &t[i], "entry" ) == 0 ){
+	    }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_entry ) == 0 ){
 	        i++;
-	    }else if( jsoneq( VAR_json_str, &t[i], "function") == 0 ){
+	    }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_function ) == 0 ){
 	        i++;
-		}else if( jsoneq( VAR_json_str, &t[i], "arg") == 0 ) {
+		}else if( jsoneq( VAR_json_str, &t[i], ATTR_key_arg ) == 0 ) {
 	        if(t[i+1].type != JSMN_ARRAY){
                 continue; /* We expect groups to be an array of strings */
             }
@@ -223,7 +228,7 @@ eJSMN_json_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsunit_obj*
 	      		}
             }
             i += t[i+1].size + 1;
-	    }else if( jsoneq( VAR_json_str, &t[i], "exp_val" ) == 0 ){
+	    }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
 	        /* We may want to do strtol() here to get numeric value */
 		    if( t[i+1].type == JSMN_STRING ){
 	      	    strcpy( exp_val->type, "char" );
