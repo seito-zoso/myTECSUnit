@@ -161,19 +161,19 @@
 #endif
 
 static void
-print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag );
+print_cell_by_path( CELLCB *p_cellcb, char_t *path, int *flag, struct tecsunit_obj *arg );
 static void
-print_cell( CELLCB *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc );
+print_cell( CELLCB *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc, struct tecsunit_obj *arg );
 static void
-print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc );
+print_celltype( CELLCB   *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc, struct tecsunit_obj *arg );
 static void
-print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc );
+print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc, struct tecsunit_obj *arg );
 static void
-print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc );
+print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc, struct tecsunit_obj *arg );
 static void
-print_celltype( CELLCB   *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc );
+print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc, struct tecsunit_obj *arg );
 static void
-print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc );
+print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc, int num, struct tecsunit_obj *arg );
 int
 isNull( const char *str );
 /* 受け口関数 #_TEPF_# */
@@ -206,6 +206,7 @@ eBody_main(CELLIDX idx)
 
     /* ここに処理本体を記述します #_TEFB_# */
     struct tecsunit_obj arguments[5];
+    struct tecsunit_obj arguments2[5];
     struct tecsunit_obj exp_val[5];
     int i, arg_num, flag;
 
@@ -249,7 +250,7 @@ eBody_main(CELLIDX idx)
     }
     puts("");
     printf( "--- TECSInfo ---\n" );
-    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
+    print_cell_by_path( p_cellcb, VAR_cell_path , &flag, arguments2 );
     if( flag ){
         return;
     }else if( isNull(VAR_entry_path) ){
@@ -263,6 +264,7 @@ eBody_main(CELLIDX idx)
     printf( "- Celltype: \"%s\"\n", VAR_celltype_path );
     printf( "- Signature: \"%s\"\n", VAR_signature_path );
     printf( "- # of arg: %d\n", VAR_arg_num );
+    // printf( "%s\n", arguments2[0].type );
 
     if( arg_num != VAR_arg_num ){
         printf( "Error: Wrong number of arguments\n" );
@@ -278,14 +280,14 @@ eBody_main(CELLIDX idx)
  * #[</POSTAMBLE>]#*/
 
 static void
-print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag )
+print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag, struct tecsunit_obj *arg )
 {
     Descriptor( nTECSInfo_sCellInfo )  desc;
     ER    ercd;
 
     ercd = cTECSInfo_findCell( path, &desc );
     if( ercd == E_OK ){
-        print_cell( p_cellcb, desc );
+        print_cell( p_cellcb, desc, arg );
     }
     else{
         *flag = 1;
@@ -294,7 +296,7 @@ print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag )
 }
 
 static void
-print_cell( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc )
+print_cell( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc, struct tecsunit_obj *arg )
 {
     Descriptor( nTECSInfo_sCelltypeInfo ) CTdesc;
     void  *cbp, *inibp;
@@ -304,11 +306,11 @@ print_cell( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCellInfo )  CELLdesc )
     cCellInfo_getCelltypeInfo( &CTdesc );
 
     /* celltype info */
-    print_celltype( p_cellcb, CTdesc );
+    print_celltype( p_cellcb, CTdesc, arg );
 }
 
 static void
-print_celltype( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc )
+print_celltype( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc, struct tecsunit_obj *arg )
 {
 
     Descriptor( nTECSInfo_sEntryInfo ) entryDesc;
@@ -319,12 +321,12 @@ print_celltype( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc
 
     for( i = 0; i < n; i++ ){
       cCelltypeInfo_getEntryInfo(i, &entryDesc);
-      print_entry(p_cellcb, entryDesc );
+      print_entry(p_cellcb, entryDesc, arg );
     }
 }
 
 static void
-print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc )
+print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc, struct tecsunit_obj *arg )
 {
     Descriptor( nTECSInfo_sSignatureInfo ) sigDesc;
     cEntryInfo_set_descriptor( Edesc );
@@ -332,14 +334,14 @@ print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc )
     if( !strcmp(VAR_entry_path, VAR_entry_path_tmp ) ){
       sprintf( VAR_entry_path, "%s.%s", VAR_cell_path, VAR_entry_path_tmp );
       cEntryInfo_getSignatureInfo( &sigDesc );
-      print_signature(p_cellcb, sigDesc );
+      print_signature(p_cellcb, sigDesc, arg );
     }else{
       strcpy(VAR_entry_path, "" );
     }
 }
 
 static void
-print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc )
+print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signatureDesc, struct tecsunit_obj *arg )
 {
     int n, i;
     Descriptor( nTECSInfo_sFunctionInfo )  functionDesc;
@@ -349,12 +351,12 @@ print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signa
     n = cSignatureInfo_getNFunction();
     for(i = 0; i < n; i++){
         cSignatureInfo_getFunctionInfo(i, &functionDesc);
-        print_function( p_cellcb, functionDesc );
+        print_function( p_cellcb, functionDesc, arg );
     }
 }
 
 static void
-print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc )
+print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) functionDesc, struct tecsunit_obj *arg )
 {
     int i;
     Descriptor( nTECSInfo_sParamInfo ) paramInfo;
@@ -364,7 +366,7 @@ print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) function
       VAR_arg_num = cFunctionInfo_getNParam();
       for(i = 0; i < VAR_arg_num; i++){
           cFunctionInfo_getParamInfo(i, &paramInfo);
-          print_param( p_cellcb, paramInfo );
+          print_param( p_cellcb, paramInfo, i, arg );
       }
     }else{
       strcpy( VAR_function_path, "" );
@@ -372,13 +374,13 @@ print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) function
 }
 
 static void
-print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc )
+print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc, int num, struct tecsunit_obj *arg )
 {
     Descriptor( nTECSInfo_sTypeInfo ) typeInfo;
     cParamInfo_set_descriptor( paramDesc );
     cParamInfo_getTypeInfo( &typeInfo );
     cTypeInfo_set_descriptor( typeInfo );
-    cTypeInfo_getName( VAR_arg_type, ATTR_NAME_LEN);
+    cTypeInfo_getName( arg[num].type, ATTR_NAME_LEN);
 }
 
 int
