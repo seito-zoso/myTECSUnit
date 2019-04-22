@@ -33,10 +33,11 @@ celltype tTaskMain {
         call  nTECSInfo::sEntryInfo     cEntryInfo;
 
     attr{
-        int16_t NAME_LEN = 256;
+        int16_t NAME_LEN = 128;
+        int16_t ARG_NAME_LEN = 8;
+        int16_t ARG_DIM = 5;
     };
     var{
-        int arg_num;
         [size_is(NAME_LEN)]
             char_t  *cell_path;
         [size_is(NAME_LEN)]
@@ -49,10 +50,11 @@ celltype tTaskMain {
             char_t  *signature_path;
         [size_is(NAME_LEN)]
             char_t  *function_path;
-         [size_is(NAME_LEN)]
-            char_t  *function_path_tmp;
         [size_is(NAME_LEN)]
-            char_t  *arg_type;
+            char_t  *function_path_tmp;
+        int arg_num;
+        char_t  arg[5][8];
+        char_t  arg_type[5][8];
     };
 };
 

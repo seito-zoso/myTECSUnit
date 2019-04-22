@@ -24,7 +24,7 @@
 #include "tJSMN_tecsgen.h"
 #include <stdio.h>
 #include <jsmn.h>
-#define N 64
+#define N 128
 
 #ifndef E_OK
 #define	E_OK	0		/* success */
@@ -97,6 +97,7 @@ eJSMN_json_open(CELLIDX idx)
         }
     }
     fclose( fp );
+    // printf("%s\n", VAR_json_str);
     return 0;
 }
 
