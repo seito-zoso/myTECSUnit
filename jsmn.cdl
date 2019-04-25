@@ -28,6 +28,6 @@ celltype tJSMN {
   var {
     [size_is(LEN)]
       char_t  *json_str;
-    int pointer;
+    int counter = 0;
   };
 };

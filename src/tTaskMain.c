@@ -216,17 +216,21 @@ eBody_main(CELLIDX idx)
     ercd = cJSMN_json_open();
     if( ercd != E_OK ) return;
 
-    j = 1;
+    j = 0;
     while(1) {
 
-        printf( "** Target%d\n", j );
-        printf( "--- JSON ---\n" );
 
         ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
+        if( ercd == 1 ){
+            j++;
+            continue;
+        }
         if( ercd != E_OK ) return;
         ercd = cJSMN_json_arg( arguments, &exp_val, j, ATTR_NAME_LEN );
         if( ercd != E_OK ) return;
 
+        printf( "** Target%d\n", j );
+        printf( "--- JSON ---\n" );
         printf( "- Cell: \"%s\"\n", VAR_cell_path );
         printf( "- Entry: \"%s\"\n", VAR_entry_path_tmp );
         printf( "- Function: \"%s\"\n", VAR_function_path_tmp );

@@ -17,7 +17,7 @@
  * key_arg          char_t*          ATTR_key_arg
  * key_exp          char_t*          ATTR_key_exp
  * json_str         char_t*          VAR_json_str
- * pointer          int              VAR_pointer
+ * counter          int              VAR_counter
  *
  * #[</PREAMBLE>]# */
 
@@ -137,6 +137,11 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
         printf( "Object expected\n" );
         return -1;
     }
+
+    if( VAR_counter >= t[0].size ){
+        printf( "All target are checked\n" );
+        return -1;
+    }
   /* Loop over all keys of the root object */
     for( l = 1; l < r; l++ ){
         if( jsoneq( VAR_json_str, &t[l], target_path ) == 0 ){
@@ -170,11 +175,13 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
                     return -1;
                 }
             }
+            VAR_counter += 1;
             return 0;
         }
     }
-    printf( "Not exist after %s", target_path );
-    return -1;
+    // printf( "Not exist after %s", target_path );
+    // return -1;
+    return 1;
 }
 
 /* #[<ENTRY_FUNC>]# eJSMN_json_arg
