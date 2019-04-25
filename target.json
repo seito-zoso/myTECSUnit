@@ -15,14 +15,14 @@
 
 /* 以下の形式にできるといい */
 {
-  "target1":{
+  "target73":{
     "cell":"Target1", // 足りてないと（少なくても）怒る
     "entry":"eTarget1",
     "function":"double",
     "argument":[5,5],
     "exp_val":10
   },
-  "target100":{
+  "target35":{
     "cell":"Target2", /* コメントアウトもはじく */
     "entry":"eTarget2",
     "function":"add",

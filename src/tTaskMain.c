@@ -196,7 +196,7 @@ void
 eBody_main(CELLIDX idx)
 {
     CELLCB  *p_cellcb;
-    ER      ercd;
+    ER      ercd, ercd2;
     uint32_t  n;
     Descriptor( nTECSInfo_sNamespaceInfo ) NSdesc;
     Descriptor( nTECSInfo_sRegionInfo )    RGNdesc;
@@ -217,22 +217,13 @@ eBody_main(CELLIDX idx)
     ercd = cJSMN_json_open();
     if( ercd != E_OK ) return;
 
-    j = 0;
-    while(1) {
-
-        if( j > ATTR_TARGET_NUM ){
-            printf( "Too many targets or keyword is wrong.\n" );
-            printf( "Keyword is \"target#\" and keep the target number below %d\n", ATTR_TARGET_NUM );
-        }
+    for( j = 1; j < ATTR_TARGET_NUM + 1 ; j++ ) {
 
         ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
-        if( ercd == 1 ){
-            j++;
-            continue;
-        }
-        if( ercd != E_OK ) return;
-        ercd = cJSMN_json_arg( arguments, &exp_val, j, ATTR_NAME_LEN );
-        if( ercd != E_OK ) return;
+        if( ercd == 1 ) continue;
+        if( ercd == -1 ) return;
+        ercd2 = cJSMN_json_arg( arguments, &exp_val, j, ATTR_NAME_LEN );
+        if( ercd == -1 ) return;
 
         printf( "** Target%d\n", j );
         printf( "--- JSON ---\n" );
@@ -268,13 +259,14 @@ eBody_main(CELLIDX idx)
         print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
 
         if( flag ){
-            return;
+            flag = 0;
+            continue;
         }else if( isNull(VAR_entry_path) ){
             printf( "Error: Entry \"%s\" cannot found\n", VAR_entry_path_tmp );
-            return;
+            continue;
         }else if( isNull(VAR_function_path) ){
             printf( "Error: Function \"%s\" cannot found\n", VAR_function_path_tmp );
-            return;
+            continue;
         }
         printf( "- Celltype: \"%s\"\n", VAR_celltype_path );
         printf( "- Signature: \"%s\"\n", VAR_signature_path );
@@ -284,14 +276,22 @@ eBody_main(CELLIDX idx)
             printf( "Error: Wrong number of arguments\n" );
             printf( "You expected %d arguments. Function \"%s\" has %d arguments\n",
                 arg_num, VAR_function_path, VAR_arg_num );
+        }else{
+            for( i = 0; i < VAR_arg_num; i++ ){
+                printf( "  %d %s %s\n", i+1, VAR_arg_type[i], VAR_arg[i] );
+            }
         }
-        for( i = 0; i < VAR_arg_num; i++ ){
-            printf( "  %d %s %s\n", i+1, VAR_arg_type[i], VAR_arg[i] );
-        }
-
         // cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
-        j++;
         printf("\n\n");
+        if( ercd == 2 ){
+            printf( "All targets are checked\n" );
+            return;
+        }
+    }
+
+    if( j > ATTR_TARGET_NUM ){
+        printf( "Error: Too many targets or keyword is wrong.\n" );
+        printf( "Keyword is \"target#\" and keep the target number 1 ~ %d\n", ATTR_TARGET_NUM );
     }
 }
 

@@ -138,10 +138,6 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
         return -1;
     }
 
-    if( VAR_counter >= t[0].size ){
-        printf( "All target are checked\n" );
-        return -1;
-    }
   /* Loop over all keys of the root object */
     for( l = 1; l < r; l++ ){
         if( jsoneq( VAR_json_str, &t[l], target_path ) == 0 ){
@@ -176,6 +172,9 @@ eJSMN_json_parse(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_path, in
                 }
             }
             VAR_counter += 1;
+            if( VAR_counter >= t[0].size ){
+                return 2;
+            }
             return 0;
         }
     }
