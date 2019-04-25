@@ -23,8 +23,7 @@
  *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path );
  * call port: cJSMN signature: sJSMN context:task
  *   ER             cJSMN_json_open( );
- *   ER             cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, int target_num, int btr );
- *   ER             cJSMN_json_arg( struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int target_num, int btr );
+ *   ER             cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int target_num, int btr );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -219,11 +218,10 @@ eBody_main(CELLIDX idx)
 
     for( j = 1; j < ATTR_TARGET_NUM + 1 ; j++ ) {
 
-        ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
-        if( ercd == 1 ) continue;
-        if( ercd == -1 ) return;
-        ercd2 = cJSMN_json_arg( arguments, &exp_val, j, ATTR_NAME_LEN );
-        if( ercd == -1 ) return;
+        memset( arguments, 0 , sizeof(arguments) );
+        ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, arguments, &exp_val, j, ATTR_NAME_LEN );
+        if( ercd == 1 ) continue; /* そのtarget#は見つからなかった */
+        if( ercd == -1 ) return; /* jsmnエラー */
 
         printf( "** Target%d\n", j );
         printf( "--- JSON ---\n" );

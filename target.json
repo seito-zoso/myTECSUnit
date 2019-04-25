@@ -19,7 +19,7 @@
     "cell":"Target1", // 足りてないと（少なくても）怒る
     "entry":"eTarget1",
     "function":"double",
-    "argument":[5,5],
+    "argument":[5],
     "exp_val":10
   },
   "target35":{
