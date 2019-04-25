@@ -18,7 +18,7 @@ signature sJSMN{
 celltype tJSMN {
   entry sJSMN eJSMN;
   attr{
-    int16_t LEN = 256;
+    int16_t LEN = 512;
     char_t *key_cell = "cell";
     char_t *key_entry = "entry";
     char_t *key_function = "function";

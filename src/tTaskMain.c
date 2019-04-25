@@ -210,71 +210,80 @@ eBody_main(CELLIDX idx)
     /* ここに処理本体を記述します #_TEFB_# */
     struct tecsunit_obj arguments[ATTR_ARG_DIM];
     struct tecsunit_obj exp_val;
-    int i, arg_num, flag = 0;
+    int i, j, arg_num, flag = 0;
 
-    printf( "--- JSON ---\n" );
+
     ercd = cJSMN_json_open();
     if( ercd != E_OK ) return;
-    ercd = cJSMN_json_arg( arguments, &exp_val, ATTR_NAME_LEN );
-    if( ercd != E_OK ) return;
-    ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, ATTR_NAME_LEN );
-    if( ercd != E_OK ) return;
 
-    printf( "- Cell: \"%s\"\n", VAR_cell_path );
-    printf( "- Entry: \"%s\"\n", VAR_entry_path_tmp );
-    printf( "- Function: \"%s\"\n", VAR_function_path_tmp );
+    j = 1;
+    while(1) {
 
-    printf( "- Arguments\n" );
-    for( i = 0; i < 5; i++ ){
-        if(!strcmp(arguments[i].type,"char")){
-            printf( "  %d: char  \"%s\"\n", i+1, arguments[i].str );
-        }else if(!strcmp(arguments[i].type,"int")){
-            printf( "  %d: int    %d\n", i+1, arguments[i].int_num );
-        }else if(!strcmp(arguments[i].type,"double")){
-            printf( "  %d: double %lf\n", i+1, arguments[i].double_num );
-        }else{
-            break;
+        printf( "** Target%d\n", j );
+        printf( "--- JSON ---\n" );
+
+        ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
+        if( ercd != E_OK ) return;
+        ercd = cJSMN_json_arg( arguments, &exp_val, j, ATTR_NAME_LEN );
+        if( ercd != E_OK ) return;
+
+        printf( "- Cell: \"%s\"\n", VAR_cell_path );
+        printf( "- Entry: \"%s\"\n", VAR_entry_path_tmp );
+        printf( "- Function: \"%s\"\n", VAR_function_path_tmp );
+
+        printf( "- Arguments\n" );
+        for( i = 0; i < 5; i++ ){
+            if(!strcmp(arguments[i].type,"char")){
+                printf( "  %d: char  \"%s\"\n", i+1, arguments[i].str );
+            }else if(!strcmp(arguments[i].type,"int")){
+                printf( "  %d: int    %d\n", i+1, arguments[i].int_num );
+            }else if(!strcmp(arguments[i].type,"double")){
+                printf( "  %d: double %lf\n", i+1, arguments[i].double_num );
+            }else{
+                break;
+            }
         }
+        arg_num = i;
+
+        printf( "- Expected Value\n" );
+        if(!strcmp(exp_val.type,"char")){
+            printf( "  char  \"%s\"\n", exp_val.str );
+        }else if(!strcmp(exp_val.type,"int")){
+            printf( "  int    %d\n", exp_val.int_num );
+        }else if(!strcmp(exp_val.type,"double")){
+            printf( "  double %lf\n", exp_val.double_num );
+        }
+
+        puts("");
+        printf( "--- TECSInfo ---\n" );
+        print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
+
+        if( flag ){
+            return;
+        }else if( isNull(VAR_entry_path) ){
+            printf( "Error: Entry \"%s\" cannot found\n", VAR_entry_path_tmp );
+            return;
+        }else if( isNull(VAR_function_path) ){
+            printf( "Error: Function \"%s\" cannot found\n", VAR_function_path_tmp );
+            return;
+        }
+        printf( "- Celltype: \"%s\"\n", VAR_celltype_path );
+        printf( "- Signature: \"%s\"\n", VAR_signature_path );
+        printf( "- # of arg: %d\n", VAR_arg_num );
+
+        if( arg_num != VAR_arg_num ){
+            printf( "Error: Wrong number of arguments\n" );
+            printf( "You expected %d arguments. Function \"%s\" has %d arguments\n",
+                arg_num, VAR_function_path, VAR_arg_num );
+        }
+        for( i = 0; i < VAR_arg_num; i++ ){
+            printf( "  %d %s %s\n", i+1, VAR_arg_type[i], VAR_arg[i] );
+        }
+
+        // cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
+        j++;
+        printf("\n\n");
     }
-    arg_num = i;
-
-    printf( "- Expected Value\n" );
-    if(!strcmp(exp_val.type,"char")){
-        printf( "  char  \"%s\"\n", exp_val.str );
-    }else if(!strcmp(exp_val.type,"int")){
-        printf( "  int    %d\n", exp_val.int_num );
-    }else if(!strcmp(exp_val.type,"double")){
-        printf( "  double %lf\n", exp_val.double_num );
-    }
-
-    puts("");
-    printf( "--- TECSInfo ---\n" );
-    print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
-
-    if( flag ){
-        return;
-    }else if( isNull(VAR_entry_path) ){
-        printf( "Error: Entry \"%s\" cannot found\n", VAR_entry_path_tmp );
-        return;
-    }else if( isNull(VAR_function_path) ){
-        printf( "Error: Function \"%s\" cannot found\n", VAR_function_path_tmp );
-        return;
-    }
-    printf( "- Celltype: \"%s\"\n", VAR_celltype_path );
-    printf( "- Signature: \"%s\"\n", VAR_signature_path );
-    printf( "- # of arg: %d\n", VAR_arg_num );
-
-    if( arg_num != VAR_arg_num ){
-        printf( "Error: Wrong number of arguments\n" );
-        printf( "  You expected %d arguments. Function \"%s\" has %d arguments\n",
-            arg_num, VAR_function_path, VAR_arg_num );
-    }
-    for( i = 0; i < arg_num; i++ ){
-        printf( "  %d %s %s\n", i+1, VAR_arg_type[i], VAR_arg[i] );
-    }
-
-    // cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
-
 }
 
 /* #[<POSTAMBLE>]#
@@ -334,7 +343,7 @@ print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc )
     cEntryInfo_set_descriptor( Edesc );
     cEntryInfo_getName(VAR_entry_path, ATTR_NAME_LEN);
     if( !strcmp(VAR_entry_path, VAR_entry_path_tmp ) ){
-      sprintf( VAR_entry_path, "%s.%s", VAR_cell_path, VAR_entry_path_tmp );
+      // sprintf( VAR_entry_path, "%s.%s", VAR_cell_path, VAR_entry_path_tmp );
       cEntryInfo_getSignatureInfo( &sigDesc );
       print_signature(p_cellcb, sigDesc );
     }else{
