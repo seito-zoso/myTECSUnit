@@ -6,6 +6,7 @@
  * NAME_LEN         int16_t          ATTR_NAME_LEN
  * ARG_NAME_LEN     int16_t          ATTR_ARG_NAME_LEN
  * ARG_DIM          int16_t          ATTR_ARG_DIM
+ * TARGET_NUM       int16_t          ATTR_TARGET_NUM
  * cell_path        char_t*          VAR_cell_path
  * celltype_path    char_t*          VAR_celltype_path
  * entry_path       char_t*          VAR_entry_path
@@ -22,8 +23,8 @@
  *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path );
  * call port: cJSMN signature: sJSMN context:task
  *   ER             cJSMN_json_open( );
- *   ER             cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, int btr );
- *   ER             cJSMN_json_arg( struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int btr );
+ *   ER             cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, int target_num, int btr );
+ *   ER             cJSMN_json_arg( struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int target_num, int btr );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -219,6 +220,10 @@ eBody_main(CELLIDX idx)
     j = 0;
     while(1) {
 
+        if( j > ATTR_TARGET_NUM ){
+            printf( "Too many targets or keyword is wrong.\n" );
+            printf( "Keyword is \"target#\" and keep the target number below %d\n", ATTR_TARGET_NUM );
+        }
 
         ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
         if( ercd == 1 ){

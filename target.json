@@ -22,7 +22,7 @@
     "argument":[5,5],
     "exp_val":10
   },
-  "target2":{
+  "target100":{
     "cell":"Target2", /* コメントアウトもはじく */
     "entry":"eTarget2",
     "function":"add",
