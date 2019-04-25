@@ -20,7 +20,7 @@
  *
  * 呼び口関数 #_TCPF_#
  * call port: cUnit signature: sTECSUnit context:task
- *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path );
+ *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path, const struct tecsunit_obj* arguments, const struct tecsunit_obj* exp_val );
  * call port: cJSMN signature: sJSMN context:task
  *   ER             cJSMN_json_open( );
  *   ER             cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int target_num, int btr );
@@ -279,7 +279,7 @@ eBody_main(CELLIDX idx)
                 printf( "  %d %s %s\n", i+1, VAR_arg_type[i], VAR_arg[i] );
             }
         }
-        // cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path );
+        cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path, arguments, &exp_val );
         printf("\n\n");
         if( ercd == 2 ){
             printf( "All targets are checked\n" );

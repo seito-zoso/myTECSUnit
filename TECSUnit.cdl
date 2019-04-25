@@ -1,9 +1,12 @@
+import_C("json_struct.h");
 
 signature sTECSUnit {
   void main( [in,string] const char_t *cell_path,
              [in,string] const char_t *entry_path,
              [in,string] const char_t *signature_path,
-             [in,string] const char_t *function_path );
+             [in,string] const char_t *function_path,
+             [in] const struct tecsunit_obj *arguments,
+             [in] const struct tecsunit_obj *exp_val );
 };
 
 celltype tTECSUnit {
@@ -40,4 +43,16 @@ celltype tTECSUnit {
     [dynamic, optional]
       call sTarget2 cUnitTest2;
     /*----- /TECSUnit test -----*/
+
+    attr {
+      int16_t LEN = 256;
+    };
+    var {
+      int16_t i_ret;
+      double64_t d_ret;
+      [size_is(LEN)]
+        char *char_ret;
+      [size_is(LEN)]
+        char *cell_entry;
+    };
 };

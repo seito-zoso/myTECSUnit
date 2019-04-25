@@ -9,6 +9,13 @@
  * #[<...>]# から #[</...>]# で囲まれたコメントは編集しないでください
  * tecsmerge によるマージに使用されます
  *
+ * 属性アクセスマクロ #_CAAM_#
+ * LEN              int16_t          ATTR_LEN
+ * i_ret            int16_t          VAR_i_ret
+ * d_ret            double64_t       VAR_d_ret
+ * char_ret         char*            VAR_char_ret
+ * cell_entry       char*            VAR_cell_entry
+ *
  * 呼び口関数 #_TCPF_#
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
@@ -167,7 +174,7 @@ getRawEntryDescriptor( CELLCB *p_cellcb, char_t *entry_path, void **rawEntryDesc
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 void
-eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path)
+eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path, const struct tecsunit_obj* arguments, const struct tecsunit_obj* exp_val)
 {
 	CELLCB	*p_cellcb;
 	if (VALID_IDX(idx)) {
@@ -176,51 +183,48 @@ eUnit_main(CELLIDX idx, const char_t* cell_path, const char_t* entry_path, const
 	else {
 		/* エラー処理コードをここに記述します */
 	} /* end if VALID_IDX(idx) */
-
+    puts("");
     printf( "--- TECSUnit ---\n" );
-    printf( "Target = \"%s\" function = \"%s\"\n", entry_path, function_path );
+    printf( "Entry = \"%s\" function = \"%s\"\n", entry_path, function_path );
     /* 以下はプラグインにより自動生成される予定 */
     void *rawDesc;
     Descriptor( sTarget1 ) Target1Desc;
     Descriptor( sTarget2 ) Target2Desc;
 
-    // int ret_val; // 返り値と引数の型、個数が難しい。
-    /* json_insert */
-	int arg1 = 5;
-	int exp_val = 1;
-	int ret_val;
-    /* /json_insert */
+    sprintf( VAR_cell_entry, "%s.%s", cell_path, entry_path );
+
+
+    getRawEntryDescriptor( p_cellcb, VAR_cell_entry, &rawDesc, signature_path );
 
 /* Pluginにより全セルについて自動生成したい */
-    // if( !strcmp( cell_path, "Target1" ) ){
-    //     if( !strcmp( signature_path, "sTarget1" ) ){
-    //         getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_path );
-    //         setRawEntryDescriptor( Target1Desc, sTarget1, rawDesc );
-    //         cUnitTest1_set_descriptor( Target1Desc );
-    //         if( !strcmp( function_path, "double" ) ){
-    //             ret_val = cUnitTest1_double( arg1 );
-    //             if( ret_val == exp_val ){
-    //                 printf("OK: function \"%s\" returned expected %d\n", function_path, ret_val );
-    //             }else{
-    //                 printf("NG: you expected %d ,but function \"%s\" returned %d\n", exp_val, function_path, ret_val );
-    //             }
-    //         }
-    //     }
-    // }else if ( !strcmp( cell_path, "Target2" ) ){
-    //     if( !strcmp( signature_path, "sTarget2" ) ){
-    //         getRawEntryDescriptor( p_cellcb, entry_path, &rawDesc, signature_path );
-    //         setRawEntryDescriptor( Target2Desc, sTarget2, rawDesc );
-    //         cUnitTest2_set_descriptor( Target2Desc );
-    //         if( !strcmp( function_path, "add" ) ){
-    //             ret_val = cUnitTest2_add( arg1, arg2 );
-    //             if( ret_val == exp_val ){
-    //                 printf("OK: function \"%s\" returned expected %d\n", function_path, ret_val );
-    //             }else{
-    //                 printf("NG: you expected %d ,but function \"%s\" returned %d\n", exp_val, function_path, ret_val );
-    //             }
-    //         }
-    //     }
-    // }
+
+    if( !strcmp( cell_path, "Target1" ) ){
+        if( !strcmp( signature_path, "sTarget1" ) ){
+            setRawEntryDescriptor( Target1Desc, sTarget1, rawDesc );
+            cUnitTest1_set_descriptor( Target1Desc );
+            if( !strcmp( function_path, "double" ) ){
+                VAR_i_ret = cUnitTest1_double( arguments[0].int_num );
+                if( VAR_i_ret == exp_val->int_num ){
+                    printf("OK: function \"%s\" returned expected %d\n", function_path, VAR_i_ret );
+                }else{
+                    printf("NG: you expected %d, but function \"%s\" returned %d\n", exp_val->int_num, function_path, VAR_i_ret );
+                }
+            }
+        }
+    }else if ( !strcmp( cell_path, "Target2" ) ){
+        if( !strcmp( signature_path, "sTarget2" ) ){
+            setRawEntryDescriptor( Target2Desc, sTarget2, rawDesc );
+            cUnitTest2_set_descriptor( Target2Desc );
+            if( !strcmp( function_path, "add" ) ){
+                VAR_i_ret = cUnitTest2_add( arguments[0].int_num, arguments[1].int_num );
+                if( VAR_i_ret == exp_val->int_num ){
+                    printf("OK: function \"%s\" returned expected %d\n", function_path, VAR_i_ret );
+                }else{
+                    printf("NG: you expected %d, but function \"%s\" returned %d\n", exp_val->int_num, function_path, VAR_i_ret );
+                }
+            }
+        }
+    }
 /* Pluginにより自動生成したい */
 
     // printf( "signature \"%s\", function \"%s\" : arg = %d, return = %d\n", signature_path, function_path, arg1, ret_val );
