@@ -5,9 +5,11 @@ import("target.cdl");
 import("TECSUnit.cdl");
 import("jsmn.cdl");
 
+
 celltype tTaskMain {
     entry sTaskBody            eBody;
     call  sTECSUnit            cUnit;
+    // TODO：いるのかいらんのか
     call  sJSMN                cJSMN;
 
     call  nTECSInfo::sTECSInfo cTECSInfo;
@@ -72,8 +74,13 @@ region rTEMP{
     cell tTaskMain TaskMain {
         cTECSInfo  = TECSInfo.eTECSInfo;
         cUnit = TECSUnit.eUnit;
+        // この結合は TECSUnitPlugin により自動生成される
         cJSMN = JSMN.eJSMN;
     };
+};
+generate( TECSUnitPlugin, rTEMP::TaskMain, "" );
+region rTEMP{
+
     cell tTECSUnit TECSUnit {
         cTECSInfo  = TECSInfo.eTECSInfo;
     };

@@ -9,50 +9,50 @@ signature sTECSUnit {
              [in] const struct tecsunit_obj *exp_val );
 };
 
-celltype tTECSUnit {
-    entry sTECSUnit eUnit;
-    /*----- TECSInfo -----*/
-    call nTECSInfo::sTECSInfo cTECSInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sNamespaceInfo cNSInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sRegionInfo    cRegionInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sCellInfo      cCellInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sSignatureInfo cSignatureInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sCelltypeInfo  cCelltypeInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sVarDeclInfo   cVarDeclInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sTypeInfo      cTypeInfo;
-    /*----- TECSInfo -----*/
+// celltype tTECSUnit {
+//     entry sTECSUnit eUnit;
+//     /*----- TECSInfo -----*/
+//     call nTECSInfo::sTECSInfo cTECSInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sNamespaceInfo cNSInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sRegionInfo    cRegionInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sCellInfo      cCellInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sSignatureInfo cSignatureInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sCelltypeInfo  cCelltypeInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sVarDeclInfo   cVarDeclInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sTypeInfo      cTypeInfo;
+//     /* ----- TECSInfo ----- */
 
-    /*----- RawEntryDescriptor -----*/
-    [dynamic,optional]
-      call  nTECSInfo::sRawEntryDescriptorInfo   cREDInfo;
-    [dynamic,optional]
-      call  nTECSInfo::sEntryInfo     cEntryInfo;
-    /*----- RawEntryDescriptor -----*/
+//     /*----- RawEntryDescriptor -----*/
+//     [dynamic,optional]
+//       call  nTECSInfo::sRawEntryDescriptorInfo   cREDInfo;
+//     [dynamic,optional]
+//       call  nTECSInfo::sEntryInfo     cEntryInfo;
+//     /*----- RawEntryDescriptor -----*/
 
-    /*----- TECSUnit test -----*/
-      /* ここはプラグインにより自動生成される予定 */
-    [dynamic, optional]
-      call sTarget1 cUnitTest1;
-    [dynamic, optional]
-      call sTarget2 cUnitTest2;
-    /*----- /TECSUnit test -----*/
+//     /*----- TECSUnit test -----*/
+//       /* ここはプラグインにより自動生成される予定 */
+//     [dynamic, optional]
+//       call sTarget1 cUnitTest1;
+//     [dynamic, optional]
+//       call sTarget2 cUnitTest2;
+//     /*----- /TECSUnit test -----*/
 
-    attr {
-      int16_t LEN = 256;
-    };
-    var {
-      int16_t i_ret;
-      double64_t d_ret;
-      [size_is(LEN)]
-        char *char_ret;
-      [size_is(LEN)]
-        char *cell_entry;
-    };
-};
+//     attr {
+//       int16_t LEN = 256;
+//     };
+//     var {
+//       int16_t i_ret;
+//       double64_t d_ret;
+//       [size_is(LEN)]
+//         char *char_ret;
+//       [size_is(LEN)]
+//         char *cell_entry;
+//     };
+// };
