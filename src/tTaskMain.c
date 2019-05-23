@@ -15,6 +15,7 @@
  * function_path    char_t*          VAR_function_path
  * function_path_tmp char_t*          VAR_function_path_tmp
  * arg_num          int              VAR_arg_num
+ * exp_type         char_t*          VAR_exp_type
  * arg              char_t [5][8]    VAR_arg
  * arg_type         char_t [5][8]    VAR_arg_type
  *
@@ -23,7 +24,8 @@
  *   void           cUnit_main( const char_t* cell_path, const char_t* entry_path, const char_t* signature_path, const char_t* function_path, const struct tecsunit_obj* arguments, const struct tecsunit_obj* exp_val );
  * call port: cJSMN signature: sJSMN context:task
  *   ER             cJSMN_json_open( );
- *   ER             cJSMN_json_parse( char_t* c_path, char_t* e_path, char_t* f_path, struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int target_num, int btr );
+ *   ER             cJSMN_json_parse_path( char_t* c_path, char_t* e_path, char_t* f_path, int target_num, int btr );
+ *   ER             cJSMN_json_parse_arg( struct tecsunit_obj* arguments, struct tecsunit_obj* exp_val, int* arg_num, int target_num, int btr );
  * call port: cTECSInfo signature: nTECSInfo_sTECSInfo context:task
  *   ER             cTECSInfo_findNamespace( const char_t* namespace_path, Descriptor( nTECSInfo_sNamespaceInfo )* nsDesc );
  *   ER             cTECSInfo_findRegion( const char_t* namespace_path, Descriptor( nTECSInfo_sRegionInfo )* regionDesc );
@@ -219,7 +221,8 @@ eBody_main(CELLIDX idx)
     for( j = 1; j < ATTR_TARGET_NUM + 1 ; j++ ) {
 
         memset( arguments, 0 , sizeof(arguments) );
-        ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, arguments, &exp_val, j, ATTR_NAME_LEN );
+
+        ercd = cJSMN_json_parse( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
         if( ercd == 1 ) continue; /* そのtarget#は見つからなかった */
         if( ercd == -1 ) return; /* jsmnエラー */
 
@@ -229,19 +232,19 @@ eBody_main(CELLIDX idx)
         printf( "- Entry: \"%s\"\n", VAR_entry_path_tmp );
         printf( "- Function: \"%s\"\n", VAR_function_path_tmp );
 
-        printf( "- Arguments\n" );
-        for( i = 0; i < 5; i++ ){
-            if(!strcmp(arguments[i].type,"char")){
-                printf( "  %d: char  \"%s\"\n", i+1, arguments[i].str );
-            }else if(!strcmp(arguments[i].type,"int")){
-                printf( "  %d: int    %d\n", i+1, arguments[i].int_num );
-            }else if(!strcmp(arguments[i].type,"double")){
-                printf( "  %d: double %lf\n", i+1, arguments[i].double_num );
-            }else{
-                break;
-            }
-        }
-        arg_num = i;
+        // printf( "- Arguments\n" );
+        // for( i = 0; i < ATTR_ARG_DIM; i++ ){
+        //     if(!strcmp(arguments[i].type,"char")){
+        //         printf( "  %d: char  \"%s\"\n", i+1, arguments[i].str );
+        //     }else if(!strcmp(arguments[i].type,"int")){
+        //         printf( "  %d: int    %d\n", i+1, arguments[i].int_num );
+        //     }else if(!strcmp(arguments[i].type,"double")){
+        //         printf( "  %d: double %lf\n", i+1, arguments[i].double_num );
+        //     }else{
+        //         break;
+        //     }
+        // }
+        // arg_num = i;
 
         printf( "- Expected Value\n" );
         if(!strcmp(exp_val.type,"char")){
@@ -270,15 +273,21 @@ eBody_main(CELLIDX idx)
         printf( "- Signature: \"%s\"\n", VAR_signature_path );
         printf( "- # of arg: %d\n", VAR_arg_num );
 
+        for( i = 0; i < VAR_arg_num; i++ ){
+            printf( "  %d %s %s\n", i+1, VAR_arg_type[i], VAR_arg[i] );
+            strcpy( arguments[j].type, VAR_arg_type[i] );
+        }
+        strcpy( exp_val.type, VAR_exp_type );
+
+        // argumentsにはtypeのみがTECSInfoにより入っている状態。
+        ercd = cJSMN_json_parse_arg( arguments, &exp_val, &arg_num, j, ATTR_NAME_LEN );
+
         if( arg_num != VAR_arg_num ){
             printf( "Error: Wrong number of arguments\n" );
             printf( "You expected %d arguments. Function \"%s\" has %d arguments\n",
                 arg_num, VAR_function_path, VAR_arg_num );
-        }else{
-            for( i = 0; i < VAR_arg_num; i++ ){
-                printf( "  %d %s %s\n", i+1, VAR_arg_type[i], VAR_arg[i] );
-            }
         }
+
         cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path, arguments, &exp_val );
         printf("\n\n");
         if( ercd == 2 ){
@@ -378,8 +387,15 @@ print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) function
 {
     int i;
     Descriptor( nTECSInfo_sParamInfo ) paramInfo;
+    Descriptor( nTECSInfo_sTypeInfo ) typeInfo;
+
     cFunctionInfo_set_descriptor( functionDesc );
     cFunctionInfo_getName( VAR_function_path, ATTR_NAME_LEN );
+
+    cFunctionInfo_getReturnTypeInfo( typeInfo );
+    cTypeInfo_set_descriptor( typeInfo );
+    cTypeInfo_getName( VAR_exp_type, ATTR_ARG_NAME_LEN );
+
     if( !strcmp( VAR_function_path, VAR_function_path_tmp ) ){
       VAR_arg_num = cFunctionInfo_getNParam();
       for(i = 0; i < VAR_arg_num; i++){
