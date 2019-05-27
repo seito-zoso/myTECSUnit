@@ -238,11 +238,11 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                         if( g->type == JSMN_STRING ){
                             /* strは以下に追加していきます */
                             if( !strcmp(arguments[i].type,"char") ){ // 事前にarguments.typeに持たせておく
-                                strcpy_n( arguments[j].mem_str, g->end - g->start, VAR_json_str + g->start );
+                                strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
                             }
                         }else if( g->type == JSMN_PRIMITIVE ){
                             /* numberは以下に追加していきます */
-                            strcpy_n( arguments[j].mem_str, g->end - g->start, VAR_json_str + g->start );
+                            strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
                             if( !strcmp(arguments[i].type,"double") ){
                                 arguments[j].mem_double = atof( arguments[j].str );
                             }else if( !strcmp(arguments[i].type,"int") ){
@@ -259,7 +259,7 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
                     if( t[i+1].type == JSMN_STRING ){
                         if( !strcmp(exp_val->type,"char") ){
-                            strcpy_n( exp_val->mem_str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
+                            strcpy_n( exp_val->str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
                         }
                     }else if( t[i+1].type == JSMN_PRIMITIVE ){
                         strcpy_n( exp_val->str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
@@ -271,7 +271,7 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                     }else if( t[i+1].type == JSMN_UNDEFINED ){
                         printf( "Unexpected value: %.*s\n", t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
                     }else{
-                        printf( "Wrong Type: %.*s\n", g->end - g->start, VAR_json_str + g->start );
+                        printf( "Wrong Type: %.*s\n", t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
                     }
                     i += 2;
                 }else{
