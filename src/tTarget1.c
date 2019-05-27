@@ -45,7 +45,7 @@ eTarget1_double(CELLIDX idx, int arg)
 	/* ここに処理本体を記述します #_TEFB_# */
     int answer;
     answer = arg * 2;
-    // printf("%s\n", answer );
+    printf("ans = %d\n", answer );
     return answer;
 }
 

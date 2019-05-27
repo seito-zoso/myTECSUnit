@@ -235,17 +235,18 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                     }
                     for( j = 0; j < t[i+1].size; j++ ){
                         jsmntok_t *g = &t[i+j+2];
+                        printf("arg type %s\n", arguments[j].type);
                         if( g->type == JSMN_STRING ){
                             /* strは以下に追加していきます */
-                            if( !strcmp(arguments[i].type,"char") ){ // 事前にarguments.typeに持たせておく
+                            if( !strcmp(arguments[j].type,"char") ){ // 事前にarguments.typeに持たせておく
                                 strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
                             }
                         }else if( g->type == JSMN_PRIMITIVE ){
                             /* numberは以下に追加していきます */
                             strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
-                            if( !strcmp(arguments[i].type,"double") ){
+                            if( !strcmp(arguments[j].type,"double") ){
                                 arguments[j].mem_double = atof( arguments[j].str );
-                            }else if( !strcmp(arguments[i].type,"int") ){
+                            }else if( !strcmp(arguments[j].type,"int") ){
                                 arguments[j].mem_int = atoi( arguments[j].str );
                             }
                         }else if( g->type == JSMN_UNDEFINED ){
@@ -254,8 +255,8 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                             printf( "Wrong Type: %.*s\n", g->end - g->start, VAR_json_str + g->start );
                         }
                     }
-                    i += t[i+1].size + 2;
                     *arg_num = t[i+1].size; // 引数の数をTaskMainに渡す
+                    i += t[i+1].size + 2;
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
                     if( t[i+1].type == JSMN_STRING ){
                         if( !strcmp(exp_val->type,"char") ){
