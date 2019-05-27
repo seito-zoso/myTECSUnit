@@ -246,14 +246,14 @@ eBody_main(CELLIDX idx)
         // }
         // arg_num = i;
 
-        printf( "- Expected Value\n" );
-        if(!strcmp(exp_val.type,"char")){
-            printf( "  char  \"%s\"\n", exp_val.str );
-        }else if(!strcmp(exp_val.type,"int")){
-            printf( "  int    %d\n", exp_val.int_num );
-        }else if(!strcmp(exp_val.type,"double")){
-            printf( "  double %lf\n", exp_val.double_num );
-        }
+        // printf( "- Expected Value\n" );
+        // if(!strcmp(exp_val.type,"char")){
+        //     printf( "  char  \"%s\"\n", exp_val.str );
+        // }else if(!strcmp(exp_val.type,"int")){
+        //     printf( "  int    %d\n", exp_val.int_num );
+        // }else if(!strcmp(exp_val.type,"double")){
+        //     printf( "  double %lf\n", exp_val.double_num );
+        // }
 
         puts("");
         printf( "--- TECSInfo ---\n" );
@@ -392,7 +392,7 @@ print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) function
     cFunctionInfo_set_descriptor( functionDesc );
     cFunctionInfo_getName( VAR_function_path, ATTR_NAME_LEN );
 
-    cFunctionInfo_getReturnTypeInfo( typeInfo );
+    cFunctionInfo_getReturnTypeInfo( &typeInfo );
     cTypeInfo_set_descriptor( typeInfo );
     cTypeInfo_getName( VAR_exp_type, ATTR_ARG_NAME_LEN );
 
