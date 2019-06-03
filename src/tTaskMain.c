@@ -278,18 +278,15 @@ eBody_main(CELLIDX idx)
             strcpy( arguments[i].type, VAR_arg_type[i] );
         }
         strcpy( exp_val.type, VAR_exp_type );
-
+        printf( "- Return Type: %s\n", exp_val.type );
         // argumentsにはtypeのみがTECSInfoにより入っている状態。
         ercd = cJSMN_json_parse_arg( arguments, &exp_val, &arg_num, j, ATTR_NAME_LEN );
-
-        printf("num = %d\n", arg_num);
 
         if( arg_num != VAR_arg_num ){
             printf( "Error: Wrong number of arguments\n" );
             printf( "You expected %d arguments. Function \"%s\" has %d arguments\n",
                 arg_num, VAR_function_path, VAR_arg_num );
         }
-        printf("arg = %d\n",arguments[0].mem_int);
 
         cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path, arguments, &exp_val );
         printf("\n\n");

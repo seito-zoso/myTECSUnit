@@ -167,10 +167,10 @@ eJSMN_json_parse_path(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_pat
                     return -1;
                 }
             }
-            VAR_counter += 1;
-            if( VAR_counter >= t[0].size ){
-                return 2;
-            }
+            // VAR_counter += 1;
+            // if( VAR_counter >= t[0].size ){
+            //     return 2;
+            // }
             return 0;
         }
     }
@@ -235,7 +235,6 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                     }
                     for( j = 0; j < t[i+1].size; j++ ){
                         jsmntok_t *g = &t[i+j+2];
-                        printf("arg type %s\n", arguments[j].type);
                         if( g->type == JSMN_STRING ){
                             /* strは以下に追加していきます */
                             if( !strcmp(arguments[j].type,"char") ){ // 事前にarguments.typeに持たせておく
