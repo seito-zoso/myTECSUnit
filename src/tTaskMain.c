@@ -260,14 +260,14 @@ eBody_main(CELLIDX idx)
         print_cell_by_path( p_cellcb, VAR_cell_path , &flag );
 
         if( flag ){
-            flag = 0;
-            continue;
+            printf( "Eroor: Cell \"%s\" cannot found\n", VAR_cell_path );
+            return;
         }else if( isNull(VAR_entry_path) ){
             printf( "Error: Entry \"%s\" cannot found\n", VAR_entry_path_tmp );
-            continue;
+            return;
         }else if( isNull(VAR_function_path) ){
             printf( "Error: Function \"%s\" cannot found\n", VAR_function_path_tmp );
-            continue;
+            return;
         }
         printf( "- Celltype: \"%s\"\n", VAR_celltype_path );
         printf( "- Signature: \"%s\"\n", VAR_signature_path );
@@ -318,7 +318,6 @@ print_cell_by_path( CELLCB *p_cellcb, char_t *path , int *flag )
     }
     else{
         *flag = 1;
-        printf( "Eroor: Cell \"%s\" cannot found\n", path );
     }
 }
 

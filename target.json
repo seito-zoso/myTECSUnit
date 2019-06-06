@@ -22,11 +22,11 @@
     "argument":[5],
     "exp_val":10
   },
-  "target2":{
-    "cell":"Target2", /* コメントアウトもはじく */
-    "entry":"eTarget2",
-    "function":"add",
-    "argument":[5,3],
+  "target5":{
+    "cell":"Target1", /* コメントアウトもはじく */
+    "entry":"eTarget1",
+    "function":"double",
+    "argument":[5],
     "exp_val":2
   }
   // "target3":{
