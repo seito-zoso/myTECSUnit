@@ -20,6 +20,7 @@ celltype tJSMN {
   entry sJSMN eJSMN;
   attr {
     int16_t LEN = 512;
+    int16_t TMP_LEN = 32;
     char_t *key_cell = "cell";
     char_t *key_entry = "entry";
     char_t *key_function = "function";
@@ -29,6 +30,8 @@ celltype tJSMN {
   var {
     [size_is(LEN)]
       char_t  *json_str;
+    [size_is(TMP_LEN)]
+      char_t  *tmp_str;
     int counter = 0;
   };
 };

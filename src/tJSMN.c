@@ -10,14 +10,16 @@
  * tecsmerge によるマージに使用されます
  *
  * 属性アクセスマクロ #_CAAM_#
- * LEN              int16_t          ATTR_LEN
- * key_cell         char_t*          ATTR_key_cell
- * key_entry        char_t*          ATTR_key_entry
+ * LEN              int16_t          ATTR_LEN        
+ * TMP_LEN          int16_t          ATTR_TMP_LEN    
+ * key_cell         char_t*          ATTR_key_cell   
+ * key_entry        char_t*          ATTR_key_entry  
  * key_function     char_t*          ATTR_key_function
- * key_arg          char_t*          ATTR_key_arg
- * key_exp          char_t*          ATTR_key_exp
- * json_str         char_t*          VAR_json_str
- * counter          int              VAR_counter
+ * key_arg          char_t*          ATTR_key_arg    
+ * key_exp          char_t*          ATTR_key_exp    
+ * json_str         char_t*          VAR_json_str    
+ * tmp_str          char_t*          VAR_tmp_str     
+ * counter          int              VAR_counter     
  *
  * #[</PREAMBLE>]# */
 
@@ -159,9 +161,9 @@ eJSMN_json_parse_path(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_pat
                     strcpy_n( f_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
                     i += 2;
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_arg ) == 0 ) {
-                    i += t[i+1].size + 2;
+                    i += t[i+1].size + 2; /* ignore */
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
-                    i += 2;
+                    i += 2; /* ignore */
                 }else{
                     printf( "Unexpected key: %.*s\n", t[i].end-t[i].start, VAR_json_str + t[i].start );
                     return -1;
@@ -224,11 +226,11 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
             i = l + 2;
             for( k = 0; k < t[l+1].size; k++ ){
                 if( jsoneq( VAR_json_str, &t[i], ATTR_key_cell ) == 0 ){
-                    i += 2;
+                    i += 2; /* ignore */
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_entry ) == 0 ){
-                    i += 2;
+                    i += 2; /* ignore */
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_function ) == 0 ){
-                    i += 2;
+                    i += 2; /* ignore */
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_arg ) == 0 ) {
                     if(t[i+1].type != JSMN_ARRAY){
                         continue; /* We expect groups to be an array of strings */
