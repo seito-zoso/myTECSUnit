@@ -214,7 +214,6 @@ eBody_main(CELLIDX idx)
     struct tecsunit_obj exp_val;
     int i, j, arg_num, flag = 0;
 
-
     ercd = cJSMN_json_open();
     if( ercd != E_OK ) return;
 
@@ -287,7 +286,7 @@ eBody_main(CELLIDX idx)
             printf( "You expected %d arguments. Function \"%s\" has %d arguments\n",
                 arg_num, VAR_function_path, VAR_arg_num );
         }
-
+        printf("Unit from TaskMain\n");
         cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path, arguments, &exp_val );
         printf("\n\n");
         if( ercd == 2 ){

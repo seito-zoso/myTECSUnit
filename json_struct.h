@@ -30,9 +30,10 @@ struct tecsunit_obj{
     double64_t  mem_double64_t;
     char_t      mem_char_t;
     /* ポインタ */
-    char*   mem_char_p;
-    char_t* mem_char_t_p;
-    // int*    mem_int_p;
+    char*   mem_char_buf;
+    char_t* mem_char_t_buf;
+    /* 配列 ※サイズは事前に決めなければいけない。 */
+    int8_t     mem_int8_t_buf[10];
     // double* mem_double_p;
   } data;
 };

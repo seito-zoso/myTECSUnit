@@ -6,7 +6,7 @@ signature sTarget2 {
   int add([in] int arg1, [in] int arg2);
 };
 signature sTarget3 {
-  ER send( [in, size_is(len)] const int8_t *buf, [in]int16_t len );
+  int send( [in, size_is(len)] const int8_t *buf, [in]int16_t len );
 };
 
 /* TECSUnit テスト対象セルタイプ */

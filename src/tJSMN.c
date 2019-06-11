@@ -252,17 +252,25 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                     for( j = 0; j < arg_size; j++ ){
                         i += 1; // iは各要素を指す
                         if( t[i].type == JSMN_ARRAY ){
+                            printf("引数%dは配列\n", j+1 );
                             array_size =  t[i].size;
                             for( m = 0; m < array_size; m++ ){
                                 i += 1; // 配列の中身に注目
+                                strcpy_n( VAR_tmp_str, t[i].end - t[i].start, VAR_json_str + t[i].start );
+                                if( !strcmp(arguments[j].type,"const int8_t*") ){
+                                    printf("const int8_t*\n" );
+                                    arguments[j].data.mem_int8_t_buf[m] = atoi( VAR_tmp_str );
+                                }else{
+                                    printf("TECSInfo:第%d引数は配列ではありません\n", j+1 );
+                                }
                             }
                         }else if( t[i].type == JSMN_STRING ){
                             /* strは以下に追加していきます */
                             /* 多分間違ってる */
                             if( !strcmp(arguments[j].type,"char*") ){ // 事前にarguments.typeに持たせておく
-                                strcpy_n( arguments[j].data.mem_char_p, t[i].end - t[i].start, VAR_json_str + t[i].start );
+                                strcpy_n( arguments[j].data.mem_char_buf, t[i].end - t[i].start, VAR_json_str + t[i].start );
                             }else if( !strcmp(arguments[j].type,"char_t*") ){ // 事前にarguments.typeに持たせておく
-                                strcpy_n( arguments[j].data.mem_char_p, t[i].end - t[i].start, VAR_json_str + t[i].start );
+                                strcpy_n( arguments[j].data.mem_char_t_buf, t[i].end - t[i].start, VAR_json_str + t[i].start );
                             }
                         }else if( t[i].type == JSMN_PRIMITIVE ){
                             strcpy_n( VAR_tmp_str, t[i].end - t[i].start, VAR_json_str + t[i].start );
@@ -323,7 +331,7 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
                     if( t[i+1].type == JSMN_STRING ){
                         if( !strcmp(exp_val->type,"char") ){
-                            strcpy_n( exp_val->data.mem_char_p, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
+                            strcpy_n( exp_val->data.mem_char_buf, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
                         }
                     }else if( t[i+1].type == JSMN_PRIMITIVE ){
                         strcpy_n( VAR_tmp_str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );

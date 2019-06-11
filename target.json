@@ -15,11 +15,11 @@
 
 /* 以下の形式にできるといい */
 {
-  "target3":{
+  "target6":{
     "cell":"Target3", // 足りてないと（少なくても）怒る
     "entry":"eTarget3",
     "function":"send",
-    "argument":[3,2,[1,2],4],
+    "argument":[[1,2],2],
     "exp_val":2
   },
   "target5":{
