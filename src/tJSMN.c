@@ -252,16 +252,15 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                     for( j = 0; j < arg_size; j++ ){
                         i += 1; // iは各要素を指す
                         if( t[i].type == JSMN_ARRAY ){
-                            printf("引数%dは配列\n", j+1 );
                             array_size =  t[i].size;
                             for( m = 0; m < array_size; m++ ){
                                 i += 1; // 配列の中身に注目
                                 strcpy_n( VAR_tmp_str, t[i].end - t[i].start, VAR_json_str + t[i].start );
                                 if( !strcmp(arguments[j].type,"const int8_t*") ){
-                                    printf("const int8_t*\n" );
                                     arguments[j].data.mem_int8_t_buf[m] = atoi( VAR_tmp_str );
                                 }else{
-                                    printf("TECSInfo:第%d引数は配列ではありません\n", j+1 );
+                                    printf("Arg %d is not array type\n", j+1 );
+                                    return -1;
                                 }
                             }
                         }else if( t[i].type == JSMN_STRING ){

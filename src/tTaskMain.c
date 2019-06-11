@@ -231,28 +231,6 @@ eBody_main(CELLIDX idx)
         printf( "- Entry: \"%s\"\n", VAR_entry_path_tmp );
         printf( "- Function: \"%s\"\n", VAR_function_path_tmp );
 
-        // printf( "- Arguments\n" );
-        // for( i = 0; i < ATTR_ARG_DIM; i++ ){
-        //     if(!strcmp(arguments[i].type,"char")){
-        //         printf( "  %d: char  \"%s\"\n", i+1, arguments[i].str );
-        //     }else if(!strcmp(arguments[i].type,"int")){
-        //         printf( "  %d: int    %d\n", i+1, arguments[i].int_num );
-        //     }else if(!strcmp(arguments[i].type,"double")){
-        //         printf( "  %d: double %lf\n", i+1, arguments[i].double_num );
-        //     }else{
-        //         break;
-        //     }
-        // }
-        // arg_num = i;
-
-        // printf( "- Expected Value\n" );
-        // if(!strcmp(exp_val.type,"char")){
-        //     printf( "  char  \"%s\"\n", exp_val.str );
-        // }else if(!strcmp(exp_val.type,"int")){
-        //     printf( "  int    %d\n", exp_val.int_num );
-        // }else if(!strcmp(exp_val.type,"double")){
-        //     printf( "  double %lf\n", exp_val.double_num );
-        // }
 
         puts("");
         printf( "--- TECSInfo ---\n" );
@@ -280,13 +258,13 @@ eBody_main(CELLIDX idx)
         printf( "- Return Type: %s\n", exp_val.type );
         // argumentsにはtypeのみがTECSInfoにより入っている状態。
         ercd = cJSMN_json_parse_arg( arguments, &exp_val, &arg_num, j, ATTR_NAME_LEN );
+        if( ercd == -1 ) return; /* jsmnエラー */
 
         if( arg_num != VAR_arg_num ){
             printf( "Error: Wrong number of arguments\n" );
             printf( "You expected %d arguments. Function \"%s\" has %d arguments\n",
                 arg_num, VAR_function_path, VAR_arg_num );
         }
-        printf("Unit from TaskMain\n");
         cUnit_main( VAR_cell_path, VAR_entry_path, VAR_signature_path, VAR_function_path, arguments, &exp_val );
         printf("\n\n");
         if( ercd == 2 ){
