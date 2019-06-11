@@ -122,7 +122,7 @@ eJSMN_json_parse_path(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_pat
 	} /* end if VALID_IDX(idx) */
 
 	/* ここに処理本体を記述します #_TEFB_# */
-    int r, i, j, k, l;
+    int r, i, j, k, l, m, array_size, arg_size;
     jsmn_parser p;
     jsmntok_t t[128]; /* We expect no more than 128 tokens */
     char target_path[10];
@@ -161,7 +161,18 @@ eJSMN_json_parse_path(CELLIDX idx, char_t* c_path, char_t* e_path, char_t* f_pat
                     strcpy_n( f_path, t[i+1].end-t[i+1].start, VAR_json_str + t[i+1].start );
                     i += 2;
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_arg ) == 0 ) {
-                    i += t[i+1].size + 2; /* ignore */
+                    i += 1;
+                    arg_size = t[i].size;
+                    for( j = 0; j < arg_size; j++ ){
+                        i += 1; // iは各要素を指す
+                        if( t[i].type == JSMN_ARRAY ){
+                            array_size =  t[i].size;
+                            for( m = 0; m < array_size; m++ ){
+                                i += 1; // 配列の中身に注目
+                            }
+                        }
+                    }
+                    i += 1; // 最後には配列を抜ける
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
                     i += 2; /* ignore */
                 }else{
@@ -197,7 +208,7 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
 	} /* end if VALID_IDX(idx) */
 
 	/* ここに処理本体を記述します #_TEFB_# */
-    int r, i, j, k, l;
+    int r, i, j, k, l, m, arg_size, array_size;
     jsmn_parser p;
     jsmntok_t t[128]; /* We expect no more than 128 tokens */
     char target_path[10];
@@ -235,18 +246,26 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                     if(t[i+1].type != JSMN_ARRAY){
                         continue; /* We expect groups to be an array of strings */
                     }
-                    for( j = 0; j < t[i+1].size; j++ ){
-                        jsmntok_t *g = &t[i+j+2];
-                        if( g->type == JSMN_STRING ){
+                    i += 1;
+                    arg_size = t[i].size;
+                    *arg_num = arg_size; // 引数の数をTaskMainに渡す
+                    for( j = 0; j < arg_size; j++ ){
+                        i += 1; // iは各要素を指す
+                        if( t[i].type == JSMN_ARRAY ){
+                            array_size =  t[i].size;
+                            for( m = 0; m < array_size; m++ ){
+                                i += 1; // 配列の中身に注目
+                            }
+                        }else if( t[i].type == JSMN_STRING ){
                             /* strは以下に追加していきます */
                             /* 多分間違ってる */
                             if( !strcmp(arguments[j].type,"char*") ){ // 事前にarguments.typeに持たせておく
-                                strcpy_n( arguments[j].data.mem_char_p, g->end - g->start, VAR_json_str + g->start );
+                                strcpy_n( arguments[j].data.mem_char_p, t[i].end - t[i].start, VAR_json_str + t[i].start );
                             }else if( !strcmp(arguments[j].type,"char_t*") ){ // 事前にarguments.typeに持たせておく
-                                strcpy_n( arguments[j].data.mem_char_p, g->end - g->start, VAR_json_str + g->start );
+                                strcpy_n( arguments[j].data.mem_char_p, t[i].end - t[i].start, VAR_json_str + t[i].start );
                             }
-                        }else if( g->type == JSMN_PRIMITIVE ){
-                            strcpy_n( VAR_tmp_str, g->end - g->start, VAR_json_str + g->start );
+                        }else if( t[i].type == JSMN_PRIMITIVE ){
+                            strcpy_n( VAR_tmp_str, t[i].end - t[i].start, VAR_json_str + t[i].start );
                             if( !strcmp(arguments[j].type,"char") ){
                                 arguments[j].data.mem_char = atoi( VAR_tmp_str );
                             }else if( !strcmp(arguments[j].type,"int") ){
@@ -294,14 +313,13 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                             }else if( !strcmp(arguments[j].type,"char_t") ){
                                 arguments[j].data.mem_char_t = atoi( VAR_tmp_str );
                             }
-                        }else if( g->type == JSMN_UNDEFINED ){
-                            printf( "Unexpected value: %.*s\n", g->end - g->start, VAR_json_str + g->start );
+                        }else if( t[i].type == JSMN_UNDEFINED ){
+                            printf( "Unexpected value: %.*s\n", t[i].end - t[i].start, VAR_json_str + t[i].start );
                         }else{
-                            printf( "Wrong Type: %.*s\n", g->end - g->start, VAR_json_str + g->start );
+                            printf( "Wrong Type: %.*s\n", t[i].end - t[i].start, VAR_json_str + t[i].start );
                         }
                     }
-                    *arg_num = t[i+1].size; // 引数の数をTaskMainに渡す
-                    i += t[i+1].size + 2;
+                    i += 1; // 最後には配列を抜ける
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
                     if( t[i+1].type == JSMN_STRING ){
                         if( !strcmp(exp_val->type,"char") ){

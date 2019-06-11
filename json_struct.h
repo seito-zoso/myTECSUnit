@@ -21,11 +21,11 @@ struct tecsunit_obj{
     int8_t      mem_int8_t;
     int16_t     mem_int16_t;
     int32_t     mem_int32_t;
-    int64_t     mem_int64_t
-    uint8_t     mem_uint8_t
-    uint16_t    mem_uint16_t
-    uint32_t    mem_uint32_t
-    uint64_t    mem_uint64_t
+    int64_t     mem_int64_t;
+    uint8_t     mem_uint8_t;
+    uint16_t    mem_uint16_t;
+    uint32_t    mem_uint32_t;
+    uint64_t    mem_uint64_t;
     float32_t   mem_float32_t;
     double64_t  mem_double64_t;
     char_t      mem_char_t;
