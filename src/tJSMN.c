@@ -10,16 +10,16 @@
  * tecsmerge によるマージに使用されます
  *
  * 属性アクセスマクロ #_CAAM_#
- * LEN              int16_t          ATTR_LEN        
- * TMP_LEN          int16_t          ATTR_TMP_LEN    
- * key_cell         char_t*          ATTR_key_cell   
- * key_entry        char_t*          ATTR_key_entry  
+ * LEN              int16_t          ATTR_LEN
+ * TMP_LEN          int16_t          ATTR_TMP_LEN
+ * key_cell         char_t*          ATTR_key_cell
+ * key_entry        char_t*          ATTR_key_entry
  * key_function     char_t*          ATTR_key_function
- * key_arg          char_t*          ATTR_key_arg    
- * key_exp          char_t*          ATTR_key_exp    
- * json_str         char_t*          VAR_json_str    
- * tmp_str          char_t*          VAR_tmp_str     
- * counter          int              VAR_counter     
+ * key_arg          char_t*          ATTR_key_arg
+ * key_exp          char_t*          ATTR_key_exp
+ * json_str         char_t*          VAR_json_str
+ * tmp_str          char_t*          VAR_tmp_str
+ * counter          int              VAR_counter
  *
  * #[</PREAMBLE>]# */
 
@@ -239,16 +239,60 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                         jsmntok_t *g = &t[i+j+2];
                         if( g->type == JSMN_STRING ){
                             /* strは以下に追加していきます */
-                            if( !strcmp(arguments[j].type,"char") ){ // 事前にarguments.typeに持たせておく
-                                strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
+                            /* 多分間違ってる */
+                            if( !strcmp(arguments[j].type,"char*") ){ // 事前にarguments.typeに持たせておく
+                                strcpy_n( arguments[j].data.mem_char_p, g->end - g->start, VAR_json_str + g->start );
+                            }else if( !strcmp(arguments[j].type,"char_t*") ){ // 事前にarguments.typeに持たせておく
+                                strcpy_n( arguments[j].data.mem_char_p, g->end - g->start, VAR_json_str + g->start );
                             }
                         }else if( g->type == JSMN_PRIMITIVE ){
-                            /* numberは以下に追加していきます */
-                            strcpy_n( arguments[j].str, g->end - g->start, VAR_json_str + g->start );
-                            if( !strcmp(arguments[j].type,"double") ){
-                                arguments[j].mem_double = atof( arguments[j].str );
+                            strcpy_n( VAR_tmp_str, g->end - g->start, VAR_json_str + g->start );
+                            if( !strcmp(arguments[j].type,"char") ){
+                                arguments[j].data.mem_char = atoi( VAR_tmp_str );
                             }else if( !strcmp(arguments[j].type,"int") ){
-                                arguments[j].mem_int = atoi( arguments[j].str );
+                                arguments[j].data.mem_int = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"short") ){
+                                arguments[j].data.mem_short = atof( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"long") ){
+                                arguments[j].data.mem_long = atof( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"float") ){
+                                arguments[j].data.mem_float = atof( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"double") ){
+                                arguments[j].data.mem_double = atof( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"int_t") ){
+                                arguments[j].data.mem_int_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"uint_t") ){
+                                arguments[j].data.mem_uint_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"long_t") ){
+                                arguments[j].data.mem_long_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"ulong_t") ){
+                                arguments[j].data.mem_ulong_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"short_t") ){
+                                arguments[j].data.mem_short_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"ushort_t") ){
+                                arguments[j].data.mem_ushort_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"int8_t") ){
+                                arguments[j].data.mem_int8_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"int16_t") ){
+                                arguments[j].data.mem_int16_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"int32_t") ){
+                                arguments[j].data.mem_int32_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"int64_t") ){
+                                arguments[j].data.mem_int64_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"uint8_t") ){
+                                arguments[j].data.mem_uint8_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"uint16_t") ){
+                                arguments[j].data.mem_uint16_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"uint32_t") ){
+                                arguments[j].data.mem_uint32_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"uint64_t") ){
+                                arguments[j].data.mem_uint64_t = atoi( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"float32_t") ){
+                                arguments[j].data.mem_float32_t = atof( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"double64_t") ){
+                                arguments[j].data.mem_double64_t = atof( VAR_tmp_str );
+                            }else if( !strcmp(arguments[j].type,"char_t") ){
+                                arguments[j].data.mem_char_t = atoi( VAR_tmp_str );
                             }
                         }else if( g->type == JSMN_UNDEFINED ){
                             printf( "Unexpected value: %.*s\n", g->end - g->start, VAR_json_str + g->start );
@@ -261,14 +305,14 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                 }else if( jsoneq( VAR_json_str, &t[i], ATTR_key_exp ) == 0 ){
                     if( t[i+1].type == JSMN_STRING ){
                         if( !strcmp(exp_val->type,"char") ){
-                            strcpy_n( exp_val->str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
+                            strcpy_n( exp_val->data.mem_char_p, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
                         }
                     }else if( t[i+1].type == JSMN_PRIMITIVE ){
-                        strcpy_n( exp_val->str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
+                        strcpy_n( VAR_tmp_str, t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
                         if( !strcmp(exp_val->type,"double") ){
-                            exp_val->mem_double = atof( exp_val->str );
+                            exp_val->data.mem_double = atof( VAR_tmp_str );
                         }else if( !strcmp(exp_val->type,"int") ){
-                            exp_val->mem_int = atoi( exp_val->str );
+                            exp_val->data.mem_int = atoi( VAR_tmp_str );
                         }
                     }else if( t[i+1].type == JSMN_UNDEFINED ){
                         printf( "Unexpected value: %.*s\n", t[i+1].end - t[i+1].start, VAR_json_str + t[i+1].start );
