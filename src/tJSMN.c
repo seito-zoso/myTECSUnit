@@ -256,8 +256,69 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                             for( m = 0; m < array_size; m++ ){
                                 i += 1; // 配列の中身に注目
                                 strcpy_n( VAR_tmp_str, t[i].end - t[i].start, VAR_json_str + t[i].start );
-                                if( !strcmp(arguments[j].type,"const int8_t*") ){
+                                if( !strcmp(arguments[j].type,"const int*") ){
+                                    arguments[j].data.mem_int_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const short*") ){
+                                    arguments[j].data.mem_short_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const long*") ){
+                                    arguments[j].data.mem_long_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const float*") ){
+                                    arguments[j].data.mem_float_buf[m] = atof( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const double*") ){
+                                    arguments[j].data.mem_double_buf[m] = atof( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const int_t*") ){
+                                    arguments[j].data.mem_int_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const uint_t*") ){
+                                    arguments[j].data.mem_uint_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const long_t*") ){
+                                    arguments[j].data.mem_long_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const ulong_t*") ){
+                                    arguments[j].data.mem_ulong_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const short_t*") ){
+                                    arguments[j].data.mem_short_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const ushort_t*") ){
+                                    arguments[j].data.mem_ushort_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const int8_t*") ){
                                     arguments[j].data.mem_int8_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const int16_t*") ){
+                                    arguments[j].data.mem_int16_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const int32_t*") ){
+                                    arguments[j].data.mem_int32_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const int64_t*") ){
+                                    arguments[j].data.mem_int64_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const uint8_t*") ){
+                                    arguments[j].data.mem_uint8_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const uint16_t*") ){
+                                    arguments[j].data.mem_uint16_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const uint32_t*") ){
+                                    arguments[j].data.mem_uint32_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const uint64_t*") ){
+                                    arguments[j].data.mem_uint64_t_buf[m] = atoi( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const float32_t*") ){
+                                    arguments[j].data.mem_float32_t_buf[m] = atof( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"const double64_t*") ){
+                                    arguments[j].data.mem_double64_t_buf[m] = atof( VAR_tmp_str );
+                                }else if( !strcmp(arguments[j].type,"int*") ){
+                                }else if( !strcmp(arguments[j].type,"short*") ){
+                                }else if( !strcmp(arguments[j].type,"long*") ){
+                                }else if( !strcmp(arguments[j].type,"float*") ){
+                                }else if( !strcmp(arguments[j].type,"double*") ){
+                                }else if( !strcmp(arguments[j].type,"int_t*") ){
+                                }else if( !strcmp(arguments[j].type,"uint_t*") ){
+                                }else if( !strcmp(arguments[j].type,"long_t*") ){
+                                }else if( !strcmp(arguments[j].type,"ulong_t*") ){
+                                }else if( !strcmp(arguments[j].type,"short_t*") ){
+                                }else if( !strcmp(arguments[j].type,"ushort_t*") ){
+                                }else if( !strcmp(arguments[j].type,"int8_t*") ){
+                                }else if( !strcmp(arguments[j].type,"int16_t*") ){
+                                }else if( !strcmp(arguments[j].type,"int32_t*") ){
+                                }else if( !strcmp(arguments[j].type,"int64_t*") ){
+                                }else if( !strcmp(arguments[j].type,"uint8_t*") ){
+                                }else if( !strcmp(arguments[j].type,"uint16_t*") ){
+                                }else if( !strcmp(arguments[j].type,"uint32_t*") ){
+                                }else if( !strcmp(arguments[j].type,"uint64_t*") ){
+                                }else if( !strcmp(arguments[j].type,"float32_t*") ){
+                                }else if( !strcmp(arguments[j].type,"double64_t*") ){
                                 }else{
                                     printf("Arg %d is not array type\n", j+1 );
                                     return -1;
@@ -269,6 +330,11 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                                 strcpy_n( arguments[j].data.mem_char_buf, t[i].end - t[i].start, VAR_json_str + t[i].start );
                             }else if( !strcmp(arguments[j].type,"const char_t*") ){
                                 strcpy_n( arguments[j].data.mem_char_t_buf, t[i].end - t[i].start, VAR_json_str + t[i].start );
+                            }else if( !strcmp(arguments[j].type,"char*") ){
+                            }else if( !strcmp(arguments[j].type,"char_t*") ){
+                            }else{
+                                printf("Arg %d is not string type\n", j+1 );
+                                return -1;
                             }
                         }else if( t[i].type == JSMN_PRIMITIVE ){
                             strcpy_n( VAR_tmp_str, t[i].end - t[i].start, VAR_json_str + t[i].start );
@@ -318,6 +384,9 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                                 arguments[j].data.mem_double64_t = atof( VAR_tmp_str );
                             }else if( !strcmp(arguments[j].type,"char_t") ){
                                 arguments[j].data.mem_char_t = atoi( VAR_tmp_str );
+                            }else{
+                                printf("Arg %d is not numeric type\n", j+1 );
+                                return -1;
                             }
                         }else if( t[i].type == JSMN_UNDEFINED ){
                             printf( "Unexpected value: %.*s\n", t[i].end - t[i].start, VAR_json_str + t[i].start );

@@ -8,6 +8,7 @@ signature sTarget2 {
 signature sTarget3 {
   int send( [in, size_is(len)] const int8_t *buf, [in] int8_t len );
   int sendMessage( [in, size_is(len)] const char_t *buf, [in] int8_t len );
+  int receiveMessage( [out, size_is(len)] char_t *buf, [in] int8_t len );
 };
 
 /* TECSUnit テスト対象セルタイプ */

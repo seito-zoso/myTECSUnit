@@ -13,6 +13,7 @@
 
 /* プロトタイプ宣言や変数の定義をここに書きます #_PAC_# */
 #include "tTarget3_tecsgen.h"
+#include "string.h"
 
 #ifndef E_OK
 #define	E_OK	0		/* success */
@@ -71,6 +72,27 @@ eTarget3_sendMessage(CELLIDX idx, const char_t* buf, int8_t len)
 	printf("This is eTarget3_sendMessage\n");
 	printf("%s\n", buf);
 	return 1;
+}
+
+/* #[<ENTRY_FUNC>]# eTarget3_receiveMessage
+ * name:         eTarget3_receiveMessage
+ * global_name:  tTarget3_eTarget3_receiveMessage
+ * oneway:       false
+ * #[</ENTRY_FUNC>]# */
+int
+eTarget3_receiveMessage(CELLIDX idx, char_t* buf, int8_t len)
+{
+	CELLCB	*p_cellcb;
+	if (VALID_IDX(idx)) {
+		p_cellcb = GET_CELLCB(idx);
+	}
+	else {
+		/* エラー処理コードをここに記述します */
+	} /* end if VALID_IDX(idx) */
+
+	/* ここに処理本体を記述します #_TEFB_# */
+	strcpy( buf, "test" );
+	return;
 }
 
 /* #[<POSTAMBLE>]#

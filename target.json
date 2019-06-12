@@ -15,25 +15,32 @@
 
 /* 以下の形式にできるといい */
 {
-  "target6":{
+  "target1":{
     "cell":"Target3", // 足りてないと（少なくても）怒る
     "entry":"eTarget3",
     "function":"send",
     "argument":[[1,2],2],
     "exp_val":2
   },
-  "target5":{
+  "target3":{
     "cell":"Target1", /* コメントアウトもはじく */
     "entry":"eTarget1",
     "function":"double",
     "argument":[2],
     "exp_val":4
+  },
+  "target2":{
+    "cell":"Target3", /* コメントアウトもはじく */
+    "entry":"eTarget3",
+    "function":"receiveMessage",
+    "argument":["out",6],
+    "exp_val":2
   }
-  // "target3":{
-  //   "cell":"Target2", /* コメントアウトもはじく */
-  //   "entry":"eTarget2",
-  //   "function":"add",
-  //   "argument":[5,3],
+  // "target4":{
+  //   "cell":"Target3", /* コメントアウトもはじく */
+  //   "entry":"eTarget3",
+  //   "function":"receiveMessage",
+  //   "argument":["out",6],
   //   "exp_val":2
   // }
 }
