@@ -55,11 +55,13 @@ celltype tTaskMain {
             char_t  *function_path;
         [size_is(NAME_LEN)]
             char_t  *function_path_tmp;
-        int arg_num;
+        int8_t arg_num;
         [size_is(NAME_LEN)]
             char_t *exp_type;
         char_t  arg[16][16];
         char_t  arg_type[16][16];
+        int8_t find_entry;
+        int8_t find_func;
     };
 };
 

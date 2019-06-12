@@ -14,10 +14,12 @@
  * signature_path   char_t*          VAR_signature_path
  * function_path    char_t*          VAR_function_path
  * function_path_tmp char_t*          VAR_function_path_tmp
- * arg_num          int              VAR_arg_num
+ * arg_num          int8_t           VAR_arg_num
  * exp_type         char_t*          VAR_exp_type
- * arg              char_t [5][8]    VAR_arg
- * arg_type         char_t [5][8]    VAR_arg_type
+ * arg              char_t [16][16]  VAR_arg
+ * arg_type         char_t [16][16]  VAR_arg_type
+ * find_entry       int8_t           VAR_find_entry
+ * find_func        int8_t           VAR_find_func
  *
  * 呼び口関数 #_TCPF_#
  * call port: cUnit signature: sTECSUnit context:task
@@ -218,7 +220,9 @@ eBody_main(CELLIDX idx)
     if( ercd != E_OK ) return;
 
     for( j = 1; j < ATTR_TARGET_NUM + 1 ; j++ ) {
-
+        /* 初期化 */
+        VAR_find_entry = 0;
+        VAR_find_func = 0;
         memset( arguments, 0 , sizeof(arguments) );
 
         ercd = cJSMN_json_parse_path( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
@@ -323,6 +327,9 @@ print_celltype( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc
     n = cCelltypeInfo_getNEntry();
 
     for( i = 0; i < n; i++ ){
+      if( VAR_find_entry ){
+        break;
+      }
       cCelltypeInfo_getEntryInfo(i, &entryDesc);
       print_entry(p_cellcb, entryDesc );
     }
@@ -336,10 +343,11 @@ print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc )
     cEntryInfo_getName(VAR_entry_path, ATTR_NAME_LEN);
     if( !strcmp(VAR_entry_path, VAR_entry_path_tmp ) ){
       // sprintf( VAR_entry_path, "%s.%s", VAR_cell_path, VAR_entry_path_tmp );
+      VAR_find_entry = 1;
       cEntryInfo_getSignatureInfo( &sigDesc );
       print_signature(p_cellcb, sigDesc );
     }else{
-      strcpy(VAR_entry_path, "" );
+      strcpy( VAR_entry_path, "" );
     }
 }
 
@@ -353,6 +361,9 @@ print_signature( CELLCB *p_cellcb, Descriptor( nTECSInfo_sSignatureInfo )  signa
     cSignatureInfo_getName( VAR_signature_path, ATTR_NAME_LEN );
     n = cSignatureInfo_getNFunction();
     for(i = 0; i < n; i++){
+        if( VAR_find_func ){
+            break;
+        }
         cSignatureInfo_getFunctionInfo(i, &functionDesc);
         print_function( p_cellcb, functionDesc );
     }
@@ -368,18 +379,19 @@ print_function( CELLCB *p_cellcb, Descriptor( nTECSInfo_sFunctionInfo ) function
     cFunctionInfo_set_descriptor( functionDesc );
     cFunctionInfo_getName( VAR_function_path, ATTR_NAME_LEN );
 
-    cFunctionInfo_getReturnTypeInfo( &typeInfo );
-    cTypeInfo_set_descriptor( typeInfo );
-    cTypeInfo_getName( VAR_exp_type, ATTR_ARG_NAME_LEN );
-
     if( !strcmp( VAR_function_path, VAR_function_path_tmp ) ){
+      VAR_find_func = 1;
       VAR_arg_num = cFunctionInfo_getNParam();
+      cFunctionInfo_getReturnTypeInfo( &typeInfo );
+      cTypeInfo_set_descriptor( typeInfo );
+      cTypeInfo_getName( VAR_exp_type, ATTR_ARG_NAME_LEN );
       for(i = 0; i < VAR_arg_num; i++){
           cFunctionInfo_getParamInfo(i, &paramInfo);
           print_param( p_cellcb, paramInfo, i );
       }
     }else{
       strcpy( VAR_function_path, "" );
+      return;
     }
 }
 

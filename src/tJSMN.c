@@ -265,10 +265,9 @@ eJSMN_json_parse_arg(CELLIDX idx, struct tecsunit_obj* arguments, struct tecsuni
                             }
                         }else if( t[i].type == JSMN_STRING ){
                             /* strは以下に追加していきます */
-                            /* 多分間違ってる */
-                            if( !strcmp(arguments[j].type,"char*") ){ // 事前にarguments.typeに持たせておく
+                            if( !strcmp(arguments[j].type,"const char*") ){
                                 strcpy_n( arguments[j].data.mem_char_buf, t[i].end - t[i].start, VAR_json_str + t[i].start );
-                            }else if( !strcmp(arguments[j].type,"char_t*") ){ // 事前にarguments.typeに持たせておく
+                            }else if( !strcmp(arguments[j].type,"const char_t*") ){
                                 strcpy_n( arguments[j].data.mem_char_t_buf, t[i].end - t[i].start, VAR_json_str + t[i].start );
                             }
                         }else if( t[i].type == JSMN_PRIMITIVE ){
