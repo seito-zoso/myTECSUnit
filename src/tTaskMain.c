@@ -224,6 +224,9 @@ eBody_main(CELLIDX idx)
         VAR_find_entry = 0;
         VAR_find_func = 0;
         memset( arguments, 0 , sizeof(arguments) );
+        memset( VAR_arg, 0 , sizeof(VAR_arg) );
+        memset( VAR_arg_type, 0 , sizeof(VAR_arg_type) );
+
 
         ercd = cJSMN_json_parse_path( VAR_cell_path, VAR_entry_path_tmp, VAR_function_path_tmp, j, ATTR_NAME_LEN );
         if( ercd == 1 ) continue; /* そのtarget#は見つからなかった */
@@ -330,8 +333,8 @@ print_celltype( CELLCB  *p_cellcb, Descriptor( nTECSInfo_sCelltypeInfo )  CTdesc
       if( VAR_find_entry ){
         break;
       }
-      cCelltypeInfo_getEntryInfo(i, &entryDesc);
-      print_entry(p_cellcb, entryDesc );
+      cCelltypeInfo_getEntryInfo( i, &entryDesc);
+      print_entry( p_cellcb, entryDesc );
     }
 }
 
@@ -345,7 +348,7 @@ print_entry(CELLCB  *p_cellcb, Descriptor( nTECSInfo_sEntryInfo )  Edesc )
       // sprintf( VAR_entry_path, "%s.%s", VAR_cell_path, VAR_entry_path_tmp );
       VAR_find_entry = 1;
       cEntryInfo_getSignatureInfo( &sigDesc );
-      print_signature(p_cellcb, sigDesc );
+      print_signature( p_cellcb, sigDesc );
     }else{
       strcpy( VAR_entry_path, "" );
     }
@@ -405,7 +408,7 @@ print_param( CELLCB *p_cellcb, Descriptor( nTECSInfo_sParamInfo ) paramDesc, int
     cParamInfo_getTypeInfo( &typeInfo );
     cTypeInfo_set_descriptor( typeInfo );
     cTypeInfo_getName( VAR_arg_type[num], ATTR_ARG_NAME_LEN );
-    // printf("%s\n",VAR_arg_type[num]);
+    printf("%s\n",VAR_arg_type[num]);
 }
 
 int

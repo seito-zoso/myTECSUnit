@@ -31,7 +31,7 @@
     "cell":"Target3",
     "entry":"eTarget3",
     "function":"sendStruct",
-    "argument":[[1,2],2],
+    "argument":[["struct","data:1","name:aoki"]],
     "exp_val":1
   }
 }

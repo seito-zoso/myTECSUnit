@@ -92,8 +92,9 @@ eTarget3_sendStruct(CELLIDX idx, const struct target_struct* data)
 
 	/* ここに処理本体を記述します #_TEFB_# */
 	printf("This is eTarget3_sendStruct\n");
-	printf("num = %d\n", data->num );
-	printf("str = %s\n", data->str );
+	printf("num = %d\n", data->number );
+	printf("name = %s\n", data->name );
+	return 1;
 }
 
 /* #[<ENTRY_FUNC>]# eTarget3_receiveMessage

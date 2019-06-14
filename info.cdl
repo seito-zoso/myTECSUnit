@@ -36,8 +36,8 @@ celltype tTaskMain {
 
     attr{
         int16_t NAME_LEN = 128;
-        int16_t ARG_NAME_LEN = 16;
-        int16_t ARG_DIM = 16;
+        int16_t ARG_NAME_LEN = 128;
+        int16_t ARG_DIM = 32;
         int16_t TARGET_NUM = 100;
     };
     var{
@@ -58,8 +58,8 @@ celltype tTaskMain {
         int8_t arg_num;
         [size_is(NAME_LEN)]
             char_t *exp_type;
-        char_t  arg[16][16];
-        char_t  arg_type[16][16];
+        char_t  arg[32][128];
+        char_t  arg_type[32][128];
         int8_t find_entry;
         int8_t find_func;
     };
