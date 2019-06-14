@@ -1,28 +1,5 @@
-// {
-//   "cell":"Target1", // 足りてないと（少なくても）怒る
-//   "entry":"eTarget1",
-//   "function":"double",
-//   "argument":[5,5.0],
-//   "exp_val":10
-// }
-// {
-//   "cell":"Target2", /* コメントアウトもはじく */
-//   "entry":"eTarget2",
-//   "function":"add",
-//   "argument":[5,3],
-//   "exp_val":2
-// }
-
-/* 以下の形式にできるといい */
 {
   "target1":{
-    "cell":"Target3", // 足りてないと（少なくても）怒る
-    "entry":"eTarget3",
-    "function":"send",
-    "argument":[[1,2],2],
-    "exp_val":2
-  },
-  "target3":{
     "cell":"Target1", /* コメントアウトもはじく */
     "entry":"eTarget1",
     "function":"double",
@@ -30,17 +7,24 @@
     "exp_val":4
   },
   "target2":{
+    "cell":"Target2", // 足りてないと（少なくても）怒る
+    "entry":"eTarget2",
+    "function":"add",
+    "argument":[1,2],
+    "exp_val":3
+  },
+  "target3":{
     "cell":"Target3", /* コメントアウトもはじく */
     "entry":"eTarget3",
     "function":"receiveMessage",
     "argument":["out",6],
-    "exp_val":2
+    "exp_val":1
   }
   // "target4":{
   //   "cell":"Target3", /* コメントアウトもはじく */
   //   "entry":"eTarget3",
-  //   "function":"receiveMessage",
-  //   "argument":["out",6],
-  //   "exp_val":2
+  //   "function":"send",
+  //   "argument":[[1,2],2],
+  //   "exp_val":1
   // }
 }
