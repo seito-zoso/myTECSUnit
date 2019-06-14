@@ -1,3 +1,4 @@
+import_C("target_struct.h");
 /* TECSUnit テスト対象シグニチャ */
 signature sTarget1 {
   int double([in] int arg);
@@ -8,6 +9,7 @@ signature sTarget2 {
 signature sTarget3 {
   int send( [in, size_is(len)] const int8_t *buf, [in] int8_t len );
   int sendMessage( [in, size_is(len)] const char_t *buf, [in] int8_t len );
+  int sendStruct( [in] const struct target_struct *data );
   int receiveMessage( [out, size_is(len)] char_t *buf, [in] int8_t len );
 };
 
